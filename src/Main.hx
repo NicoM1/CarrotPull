@@ -12,10 +12,12 @@ import phoenix.Batcher;
 import phoenix.Shader;
 import phoenix.Texture;
 
+import player.Player;
+
 class Main extends luxe.Game {
 
 	var player: Sprite;
-	var gameResolution: Vector = new Vector(160,90);
+	public static var gameResolution: Vector = new Vector(160,90);
 	var zoom: Int = 4;
 
     override function config(config:luxe.AppConfig) {
@@ -33,11 +35,7 @@ class Main extends luxe.Game {
 		setupScreen();
 		setupBorders();
 
-		player = new Sprite({
-		   pos: Luxe.camera.center.clone(),
-		   size: new Vector(11,11),
-		   centered: false
-	   	});
+		player = new Player(Luxe.camera.center.clone());
 	   	new Sprite({
 		  	pos: new Vector(),
 			centered: false,
@@ -45,8 +43,6 @@ class Main extends luxe.Game {
 			depth: -100,
 			color: new Color(0.2,0.2,0.2)
 	  	});
-	   	x = player.pos.x;
-	   	y = player.pos.y;
     }
 
     override function onkeyup( e:KeyEvent ) {
@@ -100,30 +96,7 @@ class Main extends luxe.Game {
 		});
 	}
 
-	var x: Float = 0;
-	var y: Float = 0;
-	var g = 600;
-	var s = 40;
-	var velocity: Vector = new Vector();
     override function update(dt:Float) {
-		velocity.y += dt * g;
-		if(Luxe.input.keydown(Key.left)) {
-			x -= s*dt;
-		}
-		if(Luxe.input.keydown(Key.right)) {
-			x += s*dt;
-		}
-		if(y + player.size.y >= gameResolution.y && Luxe.input.keypressed(Key.up)) {
-			velocity.y = -200;
-		}
-		y += velocity.y * dt;
-		if(y + player.size.y > gameResolution.y) {
-			y = gameResolution.y - player.size.y;
-			velocity.y = 0;
-		}
-
-		player.pos.x = Math.floor(x);
-		player.pos.y = Math.floor(y);
     }
 
 	var _transparent: Color = new Color(0,0,0,0);
