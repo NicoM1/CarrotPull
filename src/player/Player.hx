@@ -17,7 +17,7 @@ class Player extends Sprite {
 			size: new Vector(11,11),
 			centered: false
 		});
-		physics = add(new PhysicsComponentBase());
+		physics = add(new PhysicsComponentBase(11, 11));
 	}
 
 
@@ -31,7 +31,7 @@ class Player extends Sprite {
 		if(Luxe.input.keydown(Key.right)) {
 			 physics.velocity.x = s;
 		}
-		if(physics.posReal.y + size.y >= Main.gameResolution.y && Luxe.input.keypressed(Key.up)) {
+		if(physics.onGround() && Luxe.input.keypressed(Key.up)) {
 			physics.velocity.y = -200;
 		}
 	}

@@ -7,6 +7,8 @@ import luxe.Color;
 import luxe.Camera;
 import luxe.Screen;
 
+import luxe.collision.ShapeDrawerLuxe;
+
 import phoenix.RenderTexture;
 import phoenix.Batcher;
 import phoenix.Shader;
@@ -19,6 +21,8 @@ class Main extends luxe.Game {
 	var player: Sprite;
 	public static var gameResolution: Vector = new Vector(160,90);
 	var zoom: Int = 4;
+
+	public static var shapeDrawer: ShapeDrawerLuxe = new ShapeDrawerLuxe();
 
     override function config(config:luxe.AppConfig) {
 
