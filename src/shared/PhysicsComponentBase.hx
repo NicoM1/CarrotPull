@@ -8,6 +8,8 @@ import luxe.collision.shapes.Polygon;
 import luxe.Vector;
 import luxe.Sprite;
 
+import level.Level;
+
 class PhysicsComponentBase extends Component {
 	public var velocity: Vector = new Vector();
 	public var damper: Float = 0.98;
@@ -104,9 +106,14 @@ class PhysicsComponentBase extends Component {
 		}
 		var testShape1 = Polygon.rectangle(95,50,20,10,false);
 		Main.shapeDrawer.drawShape(testShape1);
+		for(c in Level.instance.colliders) {
+			var col = Collision.shapeWithShape(collider, c.collider);
+			if(col != null && col.separation.length > 0) {
+				return true;
+			}
+		}
 		var col = Collision.shapeWithShape(testShape, collider);
 		if(col != null && col.separation.length > 0) {
-			trace(col.separation.length);
 			return true;
 		}
 		col = Collision.shapeWithShape(testShape1, collider);

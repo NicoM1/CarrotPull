@@ -15,6 +15,7 @@ import phoenix.Shader;
 import phoenix.Texture;
 
 import player.Player;
+import level.Level;
 
 class Main extends luxe.Game {
 
@@ -33,6 +34,7 @@ class Main extends luxe.Game {
     }
 
     override function ready() {
+		new Level();
 		Texture.default_filter = FilterType.nearest;
 		Luxe.renderer.clear_color = new Color(0,0,0);
 
