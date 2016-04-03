@@ -17,6 +17,14 @@ import phoenix.Texture;
 import player.Player;
 import level.Level;
 
+import mint.Control;
+import mint.types.Types;
+import mint.render.luxe.LuxeMintRender;
+import mint.render.luxe.Convert;
+import mint.layout.margins.Margins;
+import mint.focus.Focus;
+import mint.Canvas;
+
 class Main extends luxe.Game {
 
 	var player: Sprite;
@@ -25,23 +33,51 @@ class Main extends luxe.Game {
 
 	public static var shapeDrawer: ShapeDrawerLuxe = new ShapeDrawerLuxe();
 
+	public static var canvas: Canvas;
+	public static var rendering: LuxeMintRender;
+	public static var layout: Margins;
+	public static var focus: Focus;
+
+
     override function config(config:luxe.AppConfig) {
 
 		config.window.width = Math.floor(gameResolution.x * zoom);
 		config.window.height = Math.floor(gameResolution.y * zoom);
+
+		config.window.title = 'why not just fucking talk to plants';
+
+		config.preload.textures.push({id: 'assets/images/plant.png'});
+		config.preload.textures.push({id: 'assets/images/carrot.png'});
+		config.preload.textures.push({id: 'assets/images/ground.png'});
+		config.preload.textures.push({id: 'assets/images/grass.png'});
         return config;
 
     }
 
     override function ready() {
-		new Level();
 		Texture.default_filter = FilterType.nearest;
 		Luxe.renderer.clear_color = new Color(0,0,0);
+
+		rendering = new LuxeMintRender();
+		layout = new Margins();
+
+		var auto_canvas = new AutoCanvas({
+            name:'canvas',
+            rendering: rendering,
+            options: { color:new Color(1,1,1,0.0) },
+            x: 0, y:0, w: 960, h: 640
+        });
+
+		auto_canvas.auto_listen();
+		canvas = auto_canvas;
+
+		focus = new Focus(canvas);
 
 		setupScreen();
 		setupBorders();
 
-		player = new Player(Luxe.camera.center.clone());
+		new Level();
+		player = new Player(new Vector(60,10));
 	   	new Sprite({
 		  	pos: new Vector(),
 			centered: false,
@@ -51,13 +87,13 @@ class Main extends luxe.Game {
 	  	});
     }
 
-    override function onkeyup( e:KeyEvent ) {
+    /*override function onkeyup( e: KeyEvent ) {
 
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
 
-    }
+    }*/
 
 	override function onwindowsized(e: WindowEvent) {
 		setupScreen();

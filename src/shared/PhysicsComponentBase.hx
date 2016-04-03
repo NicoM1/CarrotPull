@@ -12,9 +12,9 @@ import level.Level;
 
 class PhysicsComponentBase extends Component {
 	public var velocity: Vector = new Vector();
-	public var damper: Float = 0.98;
+	public var damper: Float = 200;
 
-	public var gravity: Float = 600;
+	public var gravity: Float = 400;
 
 	var sprite: Sprite;
 	var collider: Polygon;
@@ -35,7 +35,12 @@ class PhysicsComponentBase extends Component {
 
 	override function update(dt: Float) {
 		velocity.y += gravity * dt;
-		velocity.x *= damper;
+		if(velocity.x > 0) {
+			velocity.x = Math.max(velocity.x - damper*dt, 0);
+		}
+		if(velocity.x < 0) {
+			velocity.x = Math.min(velocity.x + damper*dt, 0);
+		}
 
 		aVel.x += velocity.x * dt;
 		aVel.y += velocity.y * dt;
@@ -70,11 +75,6 @@ class PhysicsComponentBase extends Component {
 		}
 
 		pos.x = collider.x;
-
-		/*if(posReal.y + sprite.size.y > Main.gameResolution.y) {
-			posReal.y = Main.gameResolution.y - sprite.size.y;
-			velocity.y = 0;
-		}*/
 
 		Main.shapeDrawer.drawShape(collider);
 	}

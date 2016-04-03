@@ -24,6 +24,8 @@
     build : {
       dependencies : {
         luxe : '*',
+		tjson : '*',
+		mint: '*'
       }
     },
 

@@ -3,6 +3,7 @@ package player;
 import luxe.Sprite;
 import luxe.Vector;
 import luxe.Input;
+import luxe.Color;
 
 import shared.PhysicsComponentBase;
 
@@ -14,14 +15,14 @@ class Player extends Sprite {
 		super({
 			name: 'player',
 			pos: _pos,
-			size: new Vector(11,11),
+			size: new Vector(11,17),
 			centered: false
 		});
-		physics = add(new PhysicsComponentBase(11, 11));
+		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
 	}
 
 
-	var s = 40;
+	var s = 20;
 
 	override function update(dt: Float) {
 		//physics.velocity.x = 0;
@@ -32,7 +33,7 @@ class Player extends Sprite {
 			 physics.velocity.x = s;
 		}
 		if(physics.onGround() && Luxe.input.keypressed(Key.up)) {
-			physics.velocity.y = -200;
+			physics.velocity.y = -100;
 		}
 	}
 }
