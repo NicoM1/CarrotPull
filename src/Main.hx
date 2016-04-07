@@ -38,6 +38,8 @@ class Main extends luxe.Game {
 	public static var layout: Margins;
 	public static var focus: Focus;
 
+	var UIBatcher: Batcher;
+	var UICamera: Camera;
 
     override function config(config:luxe.AppConfig) {
 
@@ -58,21 +60,7 @@ class Main extends luxe.Game {
 		Texture.default_filter = FilterType.nearest;
 		Luxe.renderer.clear_color = new Color(0,0,0);
 
-		rendering = new LuxeMintRender();
-		layout = new Margins();
-
-		var auto_canvas = new AutoCanvas({
-            name:'canvas',
-            rendering: rendering,
-            options: { color:new Color(1,1,1,0.0) },
-            x: 0, y:0, w: 960, h: 640
-        });
-
-		auto_canvas.auto_listen();
-		canvas = auto_canvas;
-
-		focus = new Focus(canvas);
-
+		setupUI();
 		setupScreen();
 		setupBorders();
 
@@ -102,6 +90,34 @@ class Main extends luxe.Game {
 	function setupScreen() {
 		Luxe.camera.size = new Vector(gameResolution.x, gameResolution.y);
 		Luxe.camera.viewport.set(0, 0, Luxe.screen.w, Luxe.screen.h);
+		UICamera.viewport = new luxe.Rectangle(0, 0, Luxe.screen.w, Luxe.screen.h);
+		canvas.set_size(Luxe.screen.w, Luxe.screen.h);
+	}
+
+	function setupUI() {
+		UICamera = new Camera();
+		UIBatcher = Luxe.renderer.create_batcher({
+            name: 'uibatcher',
+            no_add: false,
+            camera: UICamera.view
+        });
+
+		rendering = new LuxeMintRender();
+		rendering.options.depth = 1000;
+		rendering.options.batcher = UIBatcher;
+		layout = new Margins();
+
+		var auto_canvas = new AutoCanvas({
+            name:'canvas',
+            rendering: rendering,
+            options: { color:new Color(1,1,1,0.0) },
+            x: 0, y:0, w: 960, h: 640
+        });
+
+		auto_canvas.auto_listen();
+		canvas = auto_canvas;
+
+		focus = new Focus(canvas);
 	}
 
 	function setupBorders() {

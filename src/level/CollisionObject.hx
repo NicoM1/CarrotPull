@@ -5,7 +5,7 @@ import luxe.collision.Collision;
 import luxe.collision.shapes.Shape;
 import luxe.collision.shapes.Polygon;
 
-class CollisionObject {
+class CollisionObject implements EditableObject {
 	public var collider(default, null): Polygon;
 
 	var width: Float;
@@ -36,7 +36,8 @@ class CollisionObject {
 				x: tmpVector1.x,
 				y: tmpVector1.y,
 				r: 3,
-				immediate: true
+				immediate: true,
+				depth: 1000
 			});
 
 			tmpVector.x = Luxe.screen.cursor.pos.x;
