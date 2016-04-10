@@ -1,6 +1,7 @@
 package level;
 
 import luxe.Vector;
+import luxe.Input;
 import luxe.collision.Collision;
 import luxe.collision.shapes.Shape;
 import luxe.collision.shapes.Polygon;
@@ -8,8 +9,8 @@ import luxe.collision.shapes.Polygon;
 class CollisionObject implements EditableObject {
 	public var collider(default, null): Polygon;
 
-	var width: Float;
-	var height: Float;
+	public var width: Int;
+	public var height: Int;
 
 	var dragging: Bool = false;
 	var resizing: Bool = false;
@@ -54,6 +55,10 @@ class CollisionObject implements EditableObject {
 					lastY = tmpVector.y;
 				}
 				if(dragging) {
+					if(Luxe.input.keypressed(Key.key_x)) {
+						Level.instance.toDestroy.push(this);
+						return;
+					}
 					Level.instance.selected = this;
 
 					collider.x = Math.round(tmpVector.x - width/2);
@@ -78,5 +83,9 @@ class CollisionObject implements EditableObject {
 				Level.instance.selected = null;
 			}
 		}
+	}
+
+	public function destroyObject() {
+		collider.destroy();
 	}
 }

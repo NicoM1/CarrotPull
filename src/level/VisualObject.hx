@@ -2,10 +2,12 @@ package level;
 
 import luxe.Sprite;
 import luxe.Vector;
+import luxe.Input;
 
 import phoenix.Texture;
 
 class VisualObject extends Sprite implements EditableObject {
+	public var texturePath(default, null): String;
 
 	var dragging: Bool = false;
 
@@ -20,6 +22,8 @@ class VisualObject extends Sprite implements EditableObject {
 			depth: depth
 		});
 		texture.filter_mag = FilterType.nearest;
+
+		this.texturePath = texturePath;
 	}
 
 	var tmpVector: Vector = new Vector();
@@ -44,6 +48,10 @@ class VisualObject extends Sprite implements EditableObject {
 					dragging = true;
 				}
 				if(dragging) {
+					if(Luxe.input.keypressed(Key.key_x)) {
+						Level.instance.toDestroy.push(this);
+						return;
+					}
 					Level.instance.selected = this;
 
 					pos.x = Math.round(tmpVector.x - size.x/2);
@@ -55,5 +63,9 @@ class VisualObject extends Sprite implements EditableObject {
 				Level.instance.selected = null;
 			}
 		}
+	}
+
+	public function destroyObject() {
+		destroy();
 	}
 }

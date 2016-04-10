@@ -1,9 +1,14 @@
 package level;
 
+import haxe.Json;
+
 import luxe.Entity;
 import luxe.Vector;
 import luxe.Sprite;
 import luxe.Color;
+import luxe.Input;
+
+import dialogs.Dialogs;
 
 import phoenix.Texture;
 
@@ -15,6 +20,8 @@ class Level extends Entity {
 
 	public var colliders: Array<CollisionObject> = [];
 	public var visuals: Array<VisualObject> = [];
+
+	public var toDestroy: Array<EditableObject> = [];
 
 	public var selected: EditableObject;
 
@@ -109,6 +116,7 @@ class Level extends Entity {
 		conversation = new conversation.ConversationTree();
 	}
 
+	var visualToggleButton: mint.Checkbox;
 	function setupUI() {
 		var canvas = Main.canvas;
 		var layout = Main.layout;
@@ -123,19 +131,22 @@ class Level extends Entity {
 			   label: { color:new Color().rgb(0x06b4fb) },
 			   close_button: { color:new Color().rgb(0x06b4fb) },
 		   },
-		   x:5, y:5, w:300, h: 100,
+		   x: 5, y: 5, w: 100, h: 300,
 		   w_min: 100, h_min: 100,
 		   collapsible:true,
 		   closable: false
 		});
 
-		var toggle = new mint.Checkbox({
+		visualToggleButton = new mint.Checkbox({
 			parent: stampWindow,
 			name: 'stamptoggle',
+			options: {
+			  	color:new Color().rgb(0x121212)
+		  	},
 			w: 15, h: 15
 		});
 
-		toggle.onchange.listen(function(x,_){editModeChanged(x);});
+		visualToggleButton.onchange.listen(function(x,_){editModeChanged(x);});
 
 		var stampList = new mint.List({
 			parent: stampWindow,
@@ -174,6 +185,35 @@ class Level extends Entity {
 		layout.margin(stampList, top, fixed, 30);
 		layout.margin(stampList, bottom, fixed, 5);
 
+		var saveButton = new mint.Button({
+			parent: stampWindow,
+			name: 'savebutton',
+			text: ' save ',
+			options: {
+			  	color:new Color().rgb(0x121212)
+		  	},
+			x: 20,
+			w: 25, h:15
+		});
+
+		var loadButton = new mint.Button({
+			parent: stampWindow,
+			name: 'loadbutton',
+			text: ' load ',
+			options: {
+			  	color:new Color().rgb(0x121212)
+		  	},
+			x: 50,
+			w: 25, h:15
+		});
+
+		saveButton.onmousedown.listen(function(_, _) {
+			trace('save');
+		});
+
+		loadButton.onmousedown.listen(function(_, _) {
+			trace('load');
+		});
 
 		stamp = new Sprite({
 			name: 'stamp',
@@ -216,13 +256,84 @@ class Level extends Entity {
 		colliders.push(new CollisionObject(Math.round(pos.x), Math.round(pos.y), Math.round(size.x), Math.round(size.y)));
 	}
 
+	function resetLevel() {
+		selected = null;
+		for(c in colliders) {
+			c.destroyObject();
+		}
+		colliders = [];
+		for(v in visuals) {
+			v.destroyObject();
+		}
+		visuals = [];
+	}
+
+	function makeJSON() {
+		var final: LevelInfo = {
+			colliders: [],
+			visuals: []
+		};
+
+		for(c in colliders) {
+			var cObject: ColliderInfo = {
+				pos: { x: Math.round(c.collider.x), y: Math.round(c.collider.y) },
+				size: { x: c.width, y: c.height }
+			};
+			final.colliders.push(cObject);
+		}
+
+		for(v in visuals) {
+			var vObject: VisualInfo = {
+				tex: v.texturePath,
+				pos: { x: Math.round(v.pos.x), y: Math.round(v.pos.y) },
+				size: { x: Math.round(v.size.x), y: Math.round(v.size.y) }
+			};
+			final.visuals.push(vObject);
+		}
+		trace(final);
+		return(final);
+	}
+
+	function parseJSON(json: String) {
+		resetLevel();
+		var jsonO: LevelInfo = Json.parse(json);
+
+		for(c in jsonO.colliders) {
+			addCollider(new Vector(c.pos.x, c.pos.y), new Vector(c.size.x, c.size.y));
+		}
+		for(v in jsonO.visuals) {
+			addVisual(v.tex, new Vector(v.pos.x, v.pos.y), new Vector(v.size.x, v.size.y));
+		}
+		trace('done');
+	}
+
 	var tmpVector: Vector = new Vector();
 	override function update(dt : Float) {
+		if(Luxe.input.keypressed(Key.key_s)) {
+			parseJSON(Json.stringify(makeJSON()));
+		}
+		if(Luxe.input.keypressed(Key.key_v)) {
+			visualToggleButton.state = !visualToggleButton.state;
+		}
 		for(c in colliders) {
 			c.update();
 		}
 		for(v in visuals) {
 			v.editUpdate();
+		}
+
+		for(d in toDestroy) {
+			if(Std.is(d, CollisionObject)) {
+				colliders.remove(cast d);
+			}
+			else if(Std.is(d, VisualObject)) {
+				visuals.remove(cast d);
+			}
+			d.destroyObject();
+		}
+		if(toDestroy.length != 0) {
+			selected = null;
+			toDestroy = [];
 		}
 
 		stamp.pos = Luxe.camera.screen_point_to_world(Luxe.screen.cursor.pos);
@@ -251,3 +362,24 @@ typedef StampInfo = {
 	w: Int,
 	h: Int
 };
+
+typedef LevelInfo = {
+	visuals: Array<VisualInfo>,
+	colliders: Array<ColliderInfo>
+}
+
+typedef VisualInfo = {
+	tex: String,
+	pos: Point,
+	size: Point
+}
+
+typedef ColliderInfo = {
+	pos: Point,
+	size: Point
+}
+
+typedef Point = {
+	x: Int,
+	y: Int
+}

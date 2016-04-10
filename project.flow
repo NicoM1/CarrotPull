@@ -25,7 +25,8 @@
       dependencies : {
         luxe : '*',
 		tjson : '*',
-		mint: '*'
+		mint: '*',
+		linc_dialogs: '*'
       }
     },
 
