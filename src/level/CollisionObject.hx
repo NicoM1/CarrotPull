@@ -45,7 +45,7 @@ class CollisionObject implements EditableObject {
 			tmpVector.y = Luxe.screen.cursor.pos.y;
 			tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
 
-			if(Luxe.input.mousedown(1)) {
+			if(Luxe.input.mousepressed(1)) {
 				if(!dragging && tmpVector1.subtract(tmpVector).length <= 3) {
 					dragging = true;
 				}
@@ -54,6 +54,8 @@ class CollisionObject implements EditableObject {
 					lastX = tmpVector.x;
 					lastY = tmpVector.y;
 				}
+			}
+			if(Luxe.input.mousedown(1)) {
 				if(dragging) {
 					if(Luxe.input.keypressed(Key.key_x)) {
 						Level.instance.toDestroy.push(this);

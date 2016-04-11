@@ -10,6 +10,8 @@ import luxe.Input;
 
 import dialogs.Dialogs;
 
+import shared.Util;
+
 import phoenix.Texture;
 
 import mint.layout.margins.Margins;
@@ -121,7 +123,7 @@ class Level extends Entity {
 		var canvas = Main.canvas;
 		var layout = Main.layout;
 
-		var stampWindow = new mint.Window({
+		var stampWindow = new ui.Window({
 		   parent: canvas,
 		   name: 'stampwindow',
 		   title: 'Stamps',
@@ -209,10 +211,33 @@ class Level extends Entity {
 
 		saveButton.onmousedown.listen(function(_, _) {
 			trace('save');
+			var path = Dialogs.save('save level.', {
+				ext: 'lvl',
+				desc: 'level file'
+			});
+			if(path != null) {
+				if(path.indexOf('.lvl') == -1) {
+					path += '.lvl';
+				}
+				Util.saveFile(Json.stringify(makeJSON()), path);
+			}
 		});
 
 		loadButton.onmousedown.listen(function(_, _) {
 			trace('load');
+			var path = Dialogs.open('load level.', [{
+				ext: 'lvl',
+				desc: 'level file'
+			},{
+				ext: 'json',
+				desc: 'generic JSON file.'
+			}]);
+			if(path != null) {
+				var data = Util.loadFile(path);
+				if(data != null) {
+					parseJSON(data);
+				}
+			}
 		});
 
 		stamp = new Sprite({
