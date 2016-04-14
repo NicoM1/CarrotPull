@@ -50,6 +50,7 @@ class VisualObject extends Sprite implements EditableObject {
 			}
 			if(Luxe.input.mousedown(1)) {
 				if(dragging) {
+					Level.instance.changed = true;
 					if(Luxe.input.keypressed(Key.key_x)) {
 						Level.instance.toDestroy.push(this);
 						return;

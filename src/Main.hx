@@ -25,6 +25,10 @@ import mint.layout.margins.Margins;
 import mint.focus.Focus;
 import mint.Canvas;
 
+import dialogs.Dialogs;
+
+import sdl.SDL;
+
 class Main extends luxe.Game {
 
 	var player: Sprite;
@@ -160,4 +164,13 @@ class Main extends luxe.Game {
 	var _transparent: Color = new Color(0,0,0,0);
 	override function onrender() {
 	}
+
+	override function ondestroy() {
+		if(Level.instance.changed)
+			SDL.showSimpleMessageBox(SDLMessageBoxFlags.SDL_MESSAGEBOX_ERROR, 'quit without saving?', 'are you sure you wish to quit?', Luxe.snow.runtime.window);
+
+		for(e in Luxe.scene.entities) {
+			e.destroy();
+		}
+    }
 }

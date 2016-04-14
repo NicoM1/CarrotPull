@@ -57,6 +57,7 @@ class CollisionObject implements EditableObject {
 			}
 			if(Luxe.input.mousedown(1)) {
 				if(dragging) {
+					Level.instance.changed = true;
 					if(Luxe.input.keypressed(Key.key_x)) {
 						Level.instance.toDestroy.push(this);
 						return;
@@ -67,6 +68,7 @@ class CollisionObject implements EditableObject {
 					collider.y = Math.round(tmpVector.y - height/2);
 				}
 				else if(resizing) {
+					Level.instance.changed = true;
 					Level.instance.selected = this;
 					width -= Math.round(lastX) - Math.round(tmpVector.x);
 					height -= Math.round(lastY) - Math.round(tmpVector.y);

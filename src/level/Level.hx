@@ -1,6 +1,7 @@
 package level;
 
 import haxe.Json;
+import haxe.io.Path;
 
 import luxe.Entity;
 import luxe.Vector;
@@ -27,6 +28,10 @@ class Level extends Entity {
 
 	public var selected: EditableObject;
 
+	public var changed: Bool = false;
+
+	var loading: Bool = false;
+
 	var plant: Sprite;
 
 	var conversation: conversation.ConversationTree;
@@ -45,10 +50,16 @@ class Level extends Entity {
 	var lastDepth: Float = 0;
 
 	public function new() {
+		loading = true;
 		instance = this;
 		super({
 			name: 'level'
 		});
+
+		trace(Util.getRelativePath('P:/git-projects/CA'));
+		trace(Util.getRelativePath('P:/git-projects/hello'));
+		trace(Util.getRelativePath('P:/git-projects/carrotpull/hello'));
+		trace(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test'));
 
 		setupUI();
 
@@ -263,6 +274,8 @@ class Level extends Entity {
 	}
 
 	function addVisual(texture: String, pos: Vector, size: Vector, ?centered: Bool = false) {
+		if(!loading)
+			changed = true;
 		if(centered) {
 			pos.x -= size.x/2;
 			pos.y -= size.y/2;
@@ -274,6 +287,8 @@ class Level extends Entity {
 	}
 
 	function addCollider(pos: Vector, size: Vector, ?centered: Bool = false) {
+		if(!loading)
+			changed = true;
 		if(centered) {
 			pos.x -= Math.round(size.x/2);
 			pos.y -= Math.round(size.y/2);
@@ -320,6 +335,7 @@ class Level extends Entity {
 	}
 
 	function parseJSON(json: String) {
+		loading = true;
 		resetLevel();
 		var jsonO: LevelInfo = Json.parse(json);
 
@@ -330,6 +346,7 @@ class Level extends Entity {
 			addVisual(v.tex, new Vector(v.pos.x, v.pos.y), new Vector(v.size.x, v.size.y));
 		}
 		trace('done');
+		loading = false;
 	}
 
 	var tmpVector: Vector = new Vector();
@@ -355,6 +372,7 @@ class Level extends Entity {
 				visuals.remove(cast d);
 			}
 			d.destroyObject();
+			changed = true;
 		}
 		if(toDestroy.length != 0) {
 			selected = null;
