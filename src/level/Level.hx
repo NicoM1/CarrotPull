@@ -60,6 +60,10 @@ class Level extends Entity {
 		trace(Util.getRelativePath('P:/git-projects/hello'));
 		trace(Util.getRelativePath('P:/git-projects/carrotpull/hello'));
 		trace(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test'));
+		trace(Util.getAbsolutePath(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test')));
+		trace(Util.getAbsolutePath(Util.getRelativePath('P:/git-projects/test')));
+		trace(Util.getAbsolutePath('P:/git-projects/test'));
+		trace(Util.getRelativePath('test'));
 
 		setupUI();
 

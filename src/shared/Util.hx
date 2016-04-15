@@ -27,6 +27,7 @@ class Util {
 	}
 
 	public static function getRelativePath(path: String): String {
+		if(path.charAt(1) != ':') return path;
 		path = Path.normalize(path).toLowerCase();
 		var exePath: String = Path.normalize(Path.directory(Sys.executablePath()).toLowerCase());
 
@@ -34,7 +35,7 @@ class Util {
 		var exeBlocks: Array<String> = exePath.split('/');
 
 		if(pathBlocks.length > exeBlocks.length) {
-			return path.replace(exePath, '');
+			return path.replace(exePath + '/', '');
 		}
 		var i: Int = 0;
 		while(i < pathBlocks.length) {
@@ -51,7 +52,30 @@ class Util {
 		for(x in i...pathBlocks.length) {
 			final += pathBlocks[i];
 		}
+
 		return final;
+	}
+
+	public static function getAbsolutePath(path: String): String {
+		if(path.charAt(1) == ':') return path;
+		path = Path.normalize(path).toLowerCase();
+		var exePath: String = Path.normalize(Path.directory(Sys.executablePath()).toLowerCase());
+
+		var pathBlocks: Array<String> = path.split('/');
+		var exeBlocks: Array<String> = exePath.split('/');
+
+		var removeCount: Int = 0;
+
+		for(p in pathBlocks) {
+			if(p == '..') {
+				exeBlocks.splice(exeBlocks.length - 1, 1);
+				removeCount++;
+			}
+		}
+
+		pathBlocks.splice(0, removeCount);
+
+		return exeBlocks.join('/') + '/' + pathBlocks.join('/');
 	}
 
 	//LEAVING THIS TO SHOW HOW FUCKING MESSY IT WAS
