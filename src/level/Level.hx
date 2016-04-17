@@ -30,6 +30,10 @@ class Level extends Entity {
 
 	public var changed: Bool = false;
 
+	var playMode: Bool = false;
+
+	var current: String;
+
 	var loading: Bool = false;
 
 	var plant: Sprite;
@@ -49,6 +53,21 @@ class Level extends Entity {
 
 	var lastDepth: Float = 0;
 
+	function setCurrent(path: String) {
+		current = Util.getRelativePath(path);
+		Util.saveFile(current, 'curlvl');
+	}
+
+	function getCurrent(): String {
+		if(current == null) {
+			var path = Util.loadFile('curlvl');
+			if(path != null) {
+				current = path;
+			}
+		}
+		return current;
+	}
+
 	public function new() {
 		loading = true;
 		instance = this;
@@ -56,7 +75,9 @@ class Level extends Entity {
 			name: 'level'
 		});
 
-		trace(Util.getRelativePath('P:/git-projects/CA'));
+		setupUI();
+
+	/*	trace(Util.getRelativePath('P:/git-projects/CA'));
 		trace(Util.getRelativePath('P:/git-projects/hello'));
 		trace(Util.getRelativePath('P:/git-projects/carrotpull/hello'));
 		trace(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test'));
@@ -64,8 +85,6 @@ class Level extends Entity {
 		trace(Util.getAbsolutePath(Util.getRelativePath('P:/git-projects/test')));
 		trace(Util.getAbsolutePath('P:/git-projects/test'));
 		trace(Util.getRelativePath('test'));
-
-		setupUI();
 
 		colliders.push(new CollisionObject(0,30,10,10));
 
@@ -130,7 +149,14 @@ class Level extends Entity {
 		});
 		ground.texture.filter_mag = FilterType.nearest;
 
-		conversation = new conversation.ConversationTree();
+		conversation = new conversation.ConversationTree();*/
+
+		if(getCurrent() != null) {
+			loadLevel(current);
+		}
+		else {
+			loadLevel('levels/test.lvl');
+		}
 	}
 
 	var visualToggleButton: mint.Checkbox;
@@ -178,6 +204,9 @@ class Level extends Entity {
 		});
 
 		for(s in stamps) {
+			var texture = Luxe.resources.texture(s.id);
+			texture.filter_mag = FilterType.nearest;
+
 			var img = new mint.Image({
 				parent: stampList,
 				name: 'image',
@@ -189,7 +218,7 @@ class Level extends Entity {
 
 			img.onmousedown.listen(function(_,_) {
 				trace(s);
-				stamp.texture = Luxe.resources.texture(s.id);
+				stamp.texture = texture;
 				stamp.size.set_xy(s.w, s.h);
 				curStamp = s;
 			});
@@ -226,33 +255,12 @@ class Level extends Entity {
 
 		saveButton.onmousedown.listen(function(_, _) {
 			trace('save');
-			var path = Dialogs.save('save level.', {
-				ext: 'lvl',
-				desc: 'level file'
-			});
-			if(path != null) {
-				if(path.indexOf('.lvl') == -1) {
-					path += '.lvl';
-				}
-				Util.saveFile(Json.stringify(makeJSON()), path);
-			}
+			pickSave();
 		});
 
 		loadButton.onmousedown.listen(function(_, _) {
 			trace('load');
-			var path = Dialogs.open('load level.', [{
-				ext: 'lvl',
-				desc: 'level file'
-			},{
-				ext: 'json',
-				desc: 'generic JSON file.'
-			}]);
-			if(path != null) {
-				var data = Util.loadFile(path);
-				if(data != null) {
-					parseJSON(data);
-				}
-			}
+			pickLevel();
 		});
 
 		stamp = new Sprite({
@@ -270,6 +278,45 @@ class Level extends Entity {
 			w: 15,
 			h: 55
 		};
+	}
+
+	function pickSave() {
+		var path = Dialogs.save('save level.', {
+			ext: 'lvl',
+			desc: 'level file'
+		});
+		saveLevel(path);
+	}
+
+	function saveLevel(path: String) {
+		if(path != null) {
+			if(path.indexOf('.lvl') == -1) {
+				path += '.lvl';
+			}
+			setCurrent(path);
+			Util.saveFile(Json.stringify(makeJSON()), path);
+		}
+	}
+
+	function pickLevel() {
+		var path = Dialogs.open('load level.', [{
+			ext: 'lvl',
+			desc: 'level file'
+		},{
+			ext: 'json',
+			desc: 'generic JSON file.'
+		}]);
+		if(path != null) {
+			loadLevel(path);
+		}
+	}
+
+	function loadLevel(path: String) {
+		var data = Util.loadFile(path);
+		if(data != null) {
+			setCurrent(path);
+			parseJSON(data);
+		}
 	}
 
 	function editModeChanged(visual: Bool) {
@@ -358,49 +405,55 @@ class Level extends Entity {
 		if(Luxe.input.keypressed(Key.key_s)) {
 			parseJSON(Json.stringify(makeJSON()));
 		}
-		if(Luxe.input.keypressed(Key.key_v)) {
-			visualToggleButton.state = !visualToggleButton.state;
+		if(Luxe.input.keypressed(Key.key_p)) {
+			playMode = !playMode;
+			stamp.visible = !playMode;
 		}
-		for(c in colliders) {
-			c.update();
-		}
-		for(v in visuals) {
-			v.editUpdate();
+		if(!playMode) {
+			if(Luxe.input.keypressed(Key.key_v)) {
+				visualToggleButton.state = !visualToggleButton.state;
+			}
+			for(c in colliders) {
+				c.update();
+			}
+			for(v in visuals) {
+				v.editUpdate();
+			}
+
+			for(d in toDestroy) {
+				if(Std.is(d, CollisionObject)) {
+					colliders.remove(cast d);
+				}
+				else if(Std.is(d, VisualObject)) {
+					visuals.remove(cast d);
+				}
+				d.destroyObject();
+				changed = true;
+			}
+			if(toDestroy.length != 0) {
+				selected = null;
+				toDestroy = [];
+			}
+
+			stamp.pos = Luxe.camera.screen_point_to_world(Luxe.screen.cursor.pos);
+			stamp.pos.x -= stamp.size.x/2;
+			stamp.pos.y -= stamp.size.y/2;
+			stamp.pos.int();
+
+			if(Luxe.input.mousepressed(3)) {
+				tmpVector.x = Luxe.screen.cursor.pos.x;
+				tmpVector.y = Luxe.screen.cursor.pos.y;
+				tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
+				if(visualEditing) {
+					addVisual(curStamp.id, tmpVector, new Vector(curStamp.w, curStamp.h), true);
+				}
+				else {
+					addCollider(tmpVector, new Vector(10,10), true);
+				}
+			}
 		}
 
-		for(d in toDestroy) {
-			if(Std.is(d, CollisionObject)) {
-				colliders.remove(cast d);
-			}
-			else if(Std.is(d, VisualObject)) {
-				visuals.remove(cast d);
-			}
-			d.destroyObject();
-			changed = true;
-		}
-		if(toDestroy.length != 0) {
-			selected = null;
-			toDestroy = [];
-		}
-
-		stamp.pos = Luxe.camera.screen_point_to_world(Luxe.screen.cursor.pos);
-		stamp.pos.x -= stamp.size.x/2;
-		stamp.pos.y -= stamp.size.y/2;
-		stamp.pos.int();
-
-		if(Luxe.input.mousepressed(3)) {
-			tmpVector.x = Luxe.screen.cursor.pos.x;
-			tmpVector.y = Luxe.screen.cursor.pos.y;
-			tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
-			if(visualEditing) {
-				addVisual(curStamp.id, tmpVector, new Vector(curStamp.w, curStamp.h), true);
-			}
-			else {
-				addCollider(tmpVector, new Vector(10,10), true);
-			}
-		}
-
-		conversation.update();
+		//conversation.update();
 	}
 }
 

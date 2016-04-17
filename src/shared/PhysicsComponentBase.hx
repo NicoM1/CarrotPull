@@ -76,7 +76,7 @@ class PhysicsComponentBase extends Component {
 
 		pos.x = collider.x;
 
-		Main.shapeDrawer.drawShape(collider);
+		//Main.shapeDrawer.drawShape(collider);
 	}
 
 	inline function alignCollider() {
@@ -95,30 +95,17 @@ class PhysicsComponentBase extends Component {
 			|| checkCollision(-1,-1);
 	}
 
-	var testShape: Polygon;
 	function checkCollision(?offsetX: Float = 0, ?offsetY: Float = 0, ?dirty: Bool = true) {
-		testShape = Polygon.rectangle(0,60,160,10,false);
-		Main.shapeDrawer.drawShape(testShape);
 		if(dirty) {
 			alignCollider();
 			collider.x += offsetX;
 			collider.y += offsetY;
 		}
-		var testShape1 = Polygon.rectangle(95,50,20,10,false);
-		Main.shapeDrawer.drawShape(testShape1);
 		for(c in Level.instance.colliders) {
 			var col = Collision.shapeWithShape(collider, c.collider);
 			if(col != null && col.separation.length > 0) {
 				return true;
 			}
-		}
-		var col = Collision.shapeWithShape(testShape, collider);
-		if(col != null && col.separation.length > 0) {
-			return true;
-		}
-		col = Collision.shapeWithShape(testShape1, collider);
-		if(col != null && col.separation.length > 0) {
-			return true;
 		}
 		return false;
 	}
