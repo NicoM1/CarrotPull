@@ -45,7 +45,8 @@ class Level extends Entity {
 	var stamps: Array<StampInfo> = [
 		{ id: 'assets/images/plant.png', w: 15, h: 55 },
 		{ id: 'assets/images/ground.png', w: 52, h: 14 },
-		{ id: 'assets/images/grass.png', w: 52, h: 12 }
+		{ id: 'assets/images/grass.png', w: 52, h: 12 },
+		{ id: 'assets/images/rocks.png', w: 52, h: 14 },
 	];
 
 	var visualEditing: Bool = true;
@@ -418,6 +419,13 @@ class Level extends Entity {
 			}
 			for(v in visuals) {
 				v.editUpdate();
+			}
+
+			if(selected == null) {
+				stamp.visible = true;
+			}
+			else {
+				stamp.visible = false;
 			}
 
 			for(d in toDestroy) {
