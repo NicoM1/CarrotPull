@@ -198,7 +198,8 @@ class Level extends Entity {
 			centered: false,
 			texture: Luxe.resources.texture('assets/images/plant.png'),
 			size: new Vector(15, 55),
-			depth: 999
+			depth: 999,
+			batcher: Main.sceneBatcher
 		});
 		stamp.texture.filter_mag = FilterType.nearest;
 
@@ -248,13 +249,6 @@ class Level extends Entity {
 			setCurrent(path);
 			parseJSON(data);
 		}
-		var collider: CollisionObject = new CollisionObject(50, 50, 0, 0, [
-			new Vector(-100,-3),
-			new Vector(10,0),
-			new Vector(10, 10),
-			new Vector(-100,10)
-		]);
-		colliders.push(collider);
 	}
 
 	function editModeChanged(visual: Bool) {
@@ -385,7 +379,7 @@ class Level extends Entity {
 				toDestroy = [];
 			}
 
-			stamp.pos = Luxe.camera.screen_point_to_world(Luxe.screen.cursor.pos);
+			stamp.pos = Main.screen_point_to_world(Luxe.screen.cursor.pos);
 			stamp.pos.x -= stamp.size.x/2;
 			stamp.pos.y -= stamp.size.y/2;
 			stamp.pos.int();
@@ -393,7 +387,7 @@ class Level extends Entity {
 			if(Luxe.input.mousepressed(3)) {
 				tmpVector.x = Luxe.screen.cursor.pos.x;
 				tmpVector.y = Luxe.screen.cursor.pos.y;
-				tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
+				tmpVector = Main.screen_point_to_world(tmpVector);
 				if(visualEditing) {
 					addVisual(curStamp.id, tmpVector, new Vector(curStamp.w, curStamp.h), true);
 				}

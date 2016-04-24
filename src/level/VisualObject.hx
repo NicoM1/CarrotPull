@@ -19,11 +19,15 @@ class VisualObject extends Sprite implements EditableObject {
 			centered: false,
 			texture: Luxe.resources.texture(texturePath),
 			size: size,
-			depth: depth
+			depth: depth,
+			batcher: Main.sceneBatcher
 		});
 		texture.filter_mag = FilterType.nearest;
 
 		this.texturePath = texturePath;
+
+		Main.rightBatcher.add(this.geometry);
+		Main.leftBatcher.add(this.geometry);
 	}
 
 	var tmpVector: Vector = new Vector();
@@ -36,12 +40,13 @@ class VisualObject extends Sprite implements EditableObject {
 				y: tmpVector1.y,
 				r: 3,
 				immediate: true,
-				depth: 1000
+				depth: 1000,
+				batcher: Main.sceneBatcher
 			});
 
 			tmpVector.x = Luxe.screen.cursor.pos.x;
 			tmpVector.y = Luxe.screen.cursor.pos.y;
-			tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
+			tmpVector = Main.screen_point_to_world(tmpVector);
 
 			if(Luxe.input.mousepressed(1)) {
 				if(!dragging && tmpVector1.subtract(tmpVector).length <= 3) {
@@ -75,6 +80,8 @@ class VisualObject extends Sprite implements EditableObject {
 	}
 
 	public function destroyObject() {
+		Main.leftBatcher.remove(this.geometry);
+		Main.rightBatcher.remove(this.geometry);
 		destroy();
 	}
 }

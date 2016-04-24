@@ -15,10 +15,13 @@ class Player extends Sprite {
 		super({
 			name: 'player',
 			pos: _pos,
-			size: new Vector(11,17),
-			centered: false
+			size: new Vector(19,31),
+			centered: false,
+			batcher: Main.sceneBatcher
 		});
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
+		//Main.rightBatcher.add(this.geometry);
+		//Main.leftBatcher.add(this.geometry);
 	}
 
 
@@ -33,7 +36,15 @@ class Player extends Sprite {
 			 physics.velocity.x = s;
 		}
 		if(physics.onGround() && Luxe.input.keypressed(Key.up)) {
-			physics.velocity.y = -100;
+			physics.velocity.y = -120;
 		}
+
+		if(pos.x > 256) {
+			pos.x = 0;
+		}
+		if(pos.x < 0) {
+			pos.x = 256;
+		}
+		Luxe.camera.pos.x = pos.x*2 - Luxe.camera.viewport.w/2;
 	}
 }

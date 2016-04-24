@@ -43,18 +43,19 @@ class CollisionObject implements EditableObject {
 				y: tmpVector1.y,
 				r: 3,
 				immediate: true,
-				depth: 1000
+				depth: 1000,
+				batcher: Main.sceneBatcher
 			});
 
 			tmpVector.x = Luxe.screen.cursor.pos.x;
 			tmpVector.y = Luxe.screen.cursor.pos.y;
-			tmpVector = Luxe.camera.screen_point_to_world(tmpVector);
+			tmpVector = Main.screen_point_to_world(tmpVector);
 
 			if(Luxe.input.mousepressed(1)) {
 				if(!dragging && tmpVector1.subtract(tmpVector).length <= 3) {
 					dragging = true;
 				}
-				else if(!resizing && Math.abs((tmpVector.x) - (collider.x + width)) < 2 && Math.abs(tmpVector.y - (collider.y + height)) < 2) {
+				else if(!resizing && Math.abs((tmpVector.x) - (collider.x + width)) < 5 && Math.abs(tmpVector.y - (collider.y + height)) < 2) {
 					resizing = true;
 					lastX = tmpVector.x;
 					lastY = tmpVector.y;
