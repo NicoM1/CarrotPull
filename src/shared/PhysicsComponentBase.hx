@@ -99,6 +99,7 @@ class PhysicsComponentBase extends Component {
 				break;
 			}
 		}
+		Luxe.camera.pos.x = pos.x*2 - Math.floor(Luxe.camera.viewport.w/2);
 	}
 
 	inline function alignCollider() {

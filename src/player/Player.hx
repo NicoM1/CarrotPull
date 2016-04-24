@@ -39,12 +39,11 @@ class Player extends Sprite {
 			physics.velocity.y = -120;
 		}
 
-		if(pos.x > 300) {
-			pos.x = 0;
+		if(pos.x > Main.wrapPoint) {
+			pos.x = pos.x - Main.wrapPoint;
 		}
 		if(pos.x < 0) {
-			pos.x = 300;
+			pos.x = Main.wrapPoint + pos.x;
 		}
-		Luxe.camera.pos.x = pos.x*2 - Luxe.camera.viewport.w/2;
 	}
 }
