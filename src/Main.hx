@@ -62,6 +62,8 @@ class Main extends luxe.Game {
 	var leftCamera: Camera;
 	public static var leftBatcher: Batcher;
 
+	var wrapPoint: Int = 300;
+
     override function config(config:luxe.AppConfig) {
 		config.window.resizable = false;
 		config.window.borderless = true;
@@ -133,10 +135,10 @@ class Main extends luxe.Game {
 			texture: rightView,
 			size: new Vector(rightView.width*zoom,rightView.height*zoom)
 		});
-		rightSprite.pos.x = Luxe.screen.width - rightSprite.size.x;
+		rightSprite.pos.x = wrapPoint*zoom;
 
 		leftCamera = new Camera({name: 'leftCamera'});
-		leftCamera.pos.set_xy(0,0);
+		leftCamera.pos.set_xy(wrapPoint-gameResolution.x/2,0);
 		leftCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y);
 		leftBatcher = Luxe.renderer.create_batcher({
 			name: 'leftBatcher',
@@ -155,7 +157,7 @@ class Main extends luxe.Game {
 			texture: leftView,
 			size: new Vector(leftView.width*zoom,leftView.height*zoom)
 		});
-		leftSprite.pos.x = -rightSprite.pos.x;
+		leftSprite.pos.x = -leftSprite.size.x;
 	}
 
     override function onkeyup( e: luxe.KeyEvent ) {
