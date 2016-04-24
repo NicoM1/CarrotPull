@@ -18,11 +18,16 @@ class CollisionObject implements EditableObject {
 	var lastX: Float = 0;
 	var lastY: Float = 0;
 
-	public function new(x: Int, y: Int, width: Int, height: Int) {
+	public function new(x: Int, y: Int, width: Int, height: Int, ?vertices: Array<Vector>) {
 		this.width = width;
 		this.height = height;
 
-		collider = Polygon.rectangle(x, y, width, height, false);
+		if(vertices == null) {
+			collider = Polygon.rectangle(x, y, width, height, false);
+		}
+		else {
+			collider = new Polygon(x, y, vertices);
+		}
 	}
 
 

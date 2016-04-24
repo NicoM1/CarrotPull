@@ -68,15 +68,39 @@ class PhysicsComponentBase extends Component {
 			collider.x += sign(vXNew);
 
 			if(checkCollision(false)) {
-				collider.x -= sign(vXNew);
+				var i: Int = 0;
+				var success: Bool = false;
+				while(i < 2) {
+					i++;
+					collider.y--;
+					if(!checkCollision(false)) {
+						pos.y -= i;
+						success = true;
+						trace('yes');
+						break;
+					}
+				}
+				if(!success) {
+					velocity.x = 0;
+					trace('no');
+					break;
+				}
+			}
+			else {
+				if(!checkCollision(sign(vXNew), 1)) {
+					if(checkCollision(sign(vXNew), 2)) {
+						pos.y += 1;
+					}
+				}
+			}
+			if(!checkCollision(sign(vXNew), 0)) {
+				pos.x += sign(vXNew);
+			}
+			else {
 				velocity.x = 0;
 				break;
 			}
 		}
-
-		pos.x = collider.x;
-
-		//Main.shapeDrawer.drawShape(collider);
 	}
 
 	inline function alignCollider() {

@@ -30,6 +30,8 @@ class Level extends Entity {
 
 	public var changed: Bool = false;
 
+	var stampWindow: ui.Window;
+
 	var playMode: Bool = false;
 
 	var current: String;
@@ -78,80 +80,6 @@ class Level extends Entity {
 
 		setupUI();
 
-	/*	trace(Util.getRelativePath('P:/git-projects/CA'));
-		trace(Util.getRelativePath('P:/git-projects/hello'));
-		trace(Util.getRelativePath('P:/git-projects/carrotpull/hello'));
-		trace(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test'));
-		trace(Util.getAbsolutePath(Util.getRelativePath('P:/git-projects/carrotpull/bin/windows/test')));
-		trace(Util.getAbsolutePath(Util.getRelativePath('P:/git-projects/test')));
-		trace(Util.getAbsolutePath('P:/git-projects/test'));
-		trace(Util.getRelativePath('test'));
-
-		colliders.push(new CollisionObject(0,30,10,10));
-
-		addVisual('assets/images/plant.png', new Vector(Luxe.camera.center.x-30, Luxe.camera.center.y - 40), new Vector(15, 55));
-
-		var plant1 = new Sprite({
-			name: 'plant1',
-			pos: new Vector(Luxe.camera.center.x-45, Luxe.camera.center.y - 45),
-			centered: false,
-			texture: Luxe.resources.texture('assets/images/carrot.png')
-		});
-		plant1.texture.filter_mag = FilterType.nearest;
-
-		var ground = new Sprite({
-			name: 'ground',
-			pos: new Vector(Luxe.camera.center.x-45, Main.gameResolution.y - 30),
-			centered: false,
-			texture: Luxe.resources.texture('assets/images/ground.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		ground = new Sprite({
-			name: 'ground',
-			pos: new Vector(Luxe.camera.center.x-80, Main.gameResolution.y - 30),
-			centered: false,
-			texture: Luxe.resources.texture('assets/images/ground.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		ground = new Sprite({
-			name: 'ground',
-			pos: new Vector(Luxe.camera.center.x, Main.gameResolution.y - 30),
-			centered: false,
-			texture: Luxe.resources.texture('assets/images/ground.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		ground = new Sprite({
-			name: 'ground1',
-			pos: new Vector(Luxe.camera.center.x, Main.gameResolution.y -38),
-			centered: false,
-			depth:10,
-			texture: Luxe.resources.texture('assets/images/grass.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		ground = new Sprite({
-			name: 'ground1',
-			pos: new Vector(Luxe.camera.center.x-80, Main.gameResolution.y -38),
-			centered: false,
-			depth:10,
-			texture: Luxe.resources.texture('assets/images/grass.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		ground = new Sprite({
-			name: 'ground1',
-			pos: new Vector(Luxe.camera.center.x-40, Main.gameResolution.y -38),
-			centered: false,
-			depth:10,
-			texture: Luxe.resources.texture('assets/images/grass.png')
-		});
-		ground.texture.filter_mag = FilterType.nearest;
-
-		conversation = new conversation.ConversationTree();*/
-
 		if(getCurrent() != null) {
 			loadLevel(current);
 		}
@@ -165,7 +93,7 @@ class Level extends Entity {
 		var canvas = Main.canvas;
 		var layout = Main.layout;
 
-		var stampWindow = new ui.Window({
+		stampWindow = new ui.Window({
 		   parent: canvas,
 		   name: 'stampwindow',
 		   title: 'Stamps',
@@ -296,6 +224,7 @@ class Level extends Entity {
 			}
 			setCurrent(path);
 			Util.saveFile(Json.stringify(makeJSON()), path);
+			changed = false;
 		}
 	}
 
@@ -309,6 +238,7 @@ class Level extends Entity {
 		}]);
 		if(path != null) {
 			loadLevel(path);
+			changed = false;
 		}
 	}
 
@@ -318,6 +248,13 @@ class Level extends Entity {
 			setCurrent(path);
 			parseJSON(data);
 		}
+		var collider: CollisionObject = new CollisionObject(50, 50, 0, 0, [
+			new Vector(-100,-3),
+			new Vector(10,0),
+			new Vector(10, 10),
+			new Vector(-100,10)
+		]);
+		colliders.push(collider);
 	}
 
 	function editModeChanged(visual: Bool) {
@@ -325,7 +262,7 @@ class Level extends Entity {
 		stamp.visible = visualEditing;
 	}
 
-	function addVisual(texture: String, pos: Vector, size: Vector, ?centered: Bool = false) {
+	function addVisual(texture: String, pos: Vector, size: Vector, ?centered: Bool = false, ?depth: Float) {
 		if(!loading)
 			changed = true;
 		if(centered) {
@@ -334,8 +271,11 @@ class Level extends Entity {
 		}
 		pos.int();
 		size.int();
-		lastDepth += 0.00001;
-		visuals.push(new VisualObject(texture, pos, size, lastDepth));
+		if(depth == null) {
+			lastDepth += 0.00001;
+			depth = lastDepth;
+		}
+		visuals.push(new VisualObject(texture, pos, size, depth));
 	}
 
 	function addCollider(pos: Vector, size: Vector, ?centered: Bool = false) {
@@ -378,7 +318,8 @@ class Level extends Entity {
 			var vObject: VisualInfo = {
 				tex: v.texturePath,
 				pos: { x: Math.round(v.pos.x), y: Math.round(v.pos.y) },
-				size: { x: Math.round(v.size.x), y: Math.round(v.size.y) }
+				size: { x: Math.round(v.size.x), y: Math.round(v.size.y) },
+				depth: v.depth
 			};
 			final.visuals.push(vObject);
 		}
@@ -395,7 +336,7 @@ class Level extends Entity {
 			addCollider(new Vector(c.pos.x, c.pos.y), new Vector(c.size.x, c.size.y));
 		}
 		for(v in jsonO.visuals) {
-			addVisual(v.tex, new Vector(v.pos.x, v.pos.y), new Vector(v.size.x, v.size.y));
+			addVisual(v.tex, new Vector(v.pos.x, v.pos.y), new Vector(v.size.x, v.size.y), v.depth);
 		}
 		trace('done');
 		loading = false;
@@ -411,6 +352,7 @@ class Level extends Entity {
 			stamp.visible = !playMode;
 		}
 		if(!playMode) {
+			stampWindow.visible = true;
 			if(Luxe.input.keypressed(Key.key_v)) {
 				visualToggleButton.state = !visualToggleButton.state;
 			}
@@ -421,7 +363,7 @@ class Level extends Entity {
 				v.editUpdate();
 			}
 
-			if(selected == null) {
+			if(selected == null && visualToggleButton.state) {
 				stamp.visible = true;
 			}
 			else {
@@ -460,6 +402,9 @@ class Level extends Entity {
 				}
 			}
 		}
+		else {
+			stampWindow.visible = false;
+		}
 
 		//conversation.update();
 	}
@@ -479,7 +424,8 @@ typedef LevelInfo = {
 typedef VisualInfo = {
 	tex: String,
 	pos: Point,
-	size: Point
+	size: Point,
+	depth: Float
 }
 
 typedef ColliderInfo = {
