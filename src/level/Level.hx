@@ -234,15 +234,21 @@ class Level extends Entity {
 		saveLevel(path);
 	}
 
-	function saveLevel(path: String) {
+	function saveLevel(path: String, ?autosave: Bool = false) {
 		if(path != null) {
 			if(path.indexOf('.lvl') == -1) {
 				path += '.lvl';
 			}
-			setCurrent(path);
+			if(!autosave) {
+				setCurrent(path);
+				changed = false;
+			}
 			Util.saveFile(Json.stringify(makeJSON()), path);
-			changed = false;
 		}
+	}
+
+	function autoSave() {
+		saveLevel('autosave.bak', true);
 	}
 
 	function pickLevel() {
@@ -338,7 +344,6 @@ class Level extends Entity {
 			};
 			final.visuals.push(vObject);
 		}
-		trace(final);
 		return(final);
 	}
 
@@ -357,8 +362,16 @@ class Level extends Entity {
 		loading = false;
 	}
 
+	var timer: Float = 0;
 	var tmpVector: Vector = new Vector();
 	override function update(dt : Float) {
+		if(!playMode) {
+			timer += dt;
+			if(timer > 10) {
+				timer = 0;
+				autoSave();
+			}
+		}
 		if(Luxe.input.keypressed(Key.key_s)) {
 			parseJSON(Json.stringify(makeJSON()));
 		}
