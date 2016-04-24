@@ -84,7 +84,8 @@ class Level extends Entity {
 			loadLevel(current);
 		}
 		else {
-			loadLevel('levels/test.lvl');
+			loadLevel('assets/levels/test.lvl');
+			trace('default loaded');
 		}
 	}
 
