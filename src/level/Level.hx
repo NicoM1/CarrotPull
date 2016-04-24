@@ -45,10 +45,19 @@ class Level extends Entity {
 	var stamp: Sprite;
 
 	var stamps: Array<StampInfo> = [
-		{ id: 'assets/images/plant.png', w: 15, h: 55 },
-		{ id: 'assets/images/ground.png', w: 52, h: 14 },
-		{ id: 'assets/images/grass.png', w: 52, h: 12 },
-		{ id: 'assets/images/rocks.png', w: 52, h: 14 },
+		// { id: 'assets/images/plant.png', w: 15, h: 55 },
+		// { id: 'assets/images/ground.png', w: 52, h: 14 },
+		// { id: 'assets/images/grass.png', w: 52, h: 12 },
+		// { id: 'assets/images/rocks.png', w: 52, h: 14 },
+		{ id: 'assets/images/worldWrap128x64_0.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_1.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_2.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_3.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_4.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_5.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_6.png', w: 128, h: 64 },
+		{ id: 'assets/images/worldWrap128x64_7.png', w: 128, h: 64 },
+
 	];
 
 	var visualEditing: Bool = true;
