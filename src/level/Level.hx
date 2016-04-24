@@ -272,6 +272,9 @@ class Level extends Entity {
 			setCurrent(path);
 			parseJSON(data);
 		}
+		else {
+			trace('level ($path) null');
+		}
 	}
 
 	function editModeChanged(visual: Bool) {
