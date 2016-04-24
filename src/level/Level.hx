@@ -105,7 +105,7 @@ class Level extends Entity {
 		   },
 		   x: 5, y: 5, w: 100, h: 300,
 		   w_min: 100, h_min: 100,
-		   collapsible:true,
+		   collapsible: false,
 		   closable: false
 		});
 
@@ -140,7 +140,7 @@ class Level extends Entity {
 				parent: stampList,
 				name: 'image',
 				x:0, y:0,
-				w:s.w*4, h:s.h*4,
+				w:s.w*2, h:s.h*2,
 				path: s.id,
 				mouse_input: true
 			});

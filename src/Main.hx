@@ -32,8 +32,8 @@ import sdl.SDL;
 class Main extends luxe.Game {
 
 	var player: Sprite;
-	public static var gameResolution: Vector = new Vector(160,90);
-	var zoom: Int = 4;
+	public static var gameResolution: Vector = new Vector(512,256);
+	var zoom: Int = 2;
 
 	public static var shapeDrawer: ShapeDrawerLuxe = new ShapeDrawerLuxe();
 
@@ -46,7 +46,8 @@ class Main extends luxe.Game {
 	var UICamera: Camera;
 
     override function config(config:luxe.AppConfig) {
-
+		config.window.resizable = false;
+		config.window.borderless = true;
 		config.window.width = Math.floor(gameResolution.x * zoom);
 		config.window.height = Math.floor(gameResolution.y * zoom);
 
@@ -67,7 +68,7 @@ class Main extends luxe.Game {
 
 		setupUI();
 		setupScreen();
-		setupBorders();
+		//setupBorders();
 
 		new Level();
 		player = new Player(new Vector(60,10));
@@ -80,13 +81,11 @@ class Main extends luxe.Game {
 	  	});
     }
 
-    /*override function onkeyup( e: KeyEvent ) {
-
+    override function onkeyup( e: luxe.KeyEvent ) {
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
-
-    }*/
+    }
 
 	override function onwindowsized(e: WindowEvent) {
 		setupScreen();
@@ -116,7 +115,7 @@ class Main extends luxe.Game {
             name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0.0) },
-            x: 0, y:0, w: 960, h: 640
+            x: 0, y:0, w: gameResolution.x * zoom, h: gameResolution.y * zoom
         });
 
 		auto_canvas.auto_listen();
@@ -125,7 +124,7 @@ class Main extends luxe.Game {
 		focus = new Focus(canvas);
 	}
 
-	function setupBorders() {
+	/*function setupBorders() {
 		new Sprite({
 			centered: false,
 			pos: new Vector(gameResolution.x, -500),
@@ -157,7 +156,7 @@ class Main extends luxe.Game {
 			color: new Color(0,0,0),
 			depth: 1000
 		});
-	}
+	}*/
 
     override function update(dt:Float) {
     }

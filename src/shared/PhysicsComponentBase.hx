@@ -76,13 +76,11 @@ class PhysicsComponentBase extends Component {
 					if(!checkCollision(false)) {
 						pos.y -= i;
 						success = true;
-						trace('yes');
 						break;
 					}
 				}
 				if(!success) {
 					velocity.x = 0;
-					trace('no');
 					break;
 				}
 			}
