@@ -150,7 +150,7 @@ class Level extends Entity {
 				parent: stampList,
 				name: 'image',
 				x:0, y:0,
-				w:s.w*2, h:s.h*2,
+				w:s.w/2, h:s.h/2,
 				path: s.id,
 				mouse_input: true
 			});
