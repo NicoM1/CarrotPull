@@ -55,7 +55,7 @@ class CollisionObject implements EditableObject {
 				if(!dragging && tmpVector1.subtract(tmpVector).length <= 3) {
 					dragging = true;
 				}
-				else if(!resizing && Math.abs((tmpVector.x) - (collider.x + width)) < 5 && Math.abs(tmpVector.y - (collider.y + height)) < 2) {
+				else if(!resizing && Math.abs((tmpVector.x) - (collider.x + width)) < 5 && Math.abs(tmpVector.y - (collider.y + height)) < 5) {
 					resizing = true;
 					lastX = tmpVector.x;
 					lastY = tmpVector.y;

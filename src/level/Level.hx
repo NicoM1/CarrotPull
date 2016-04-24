@@ -282,6 +282,11 @@ class Level extends Entity {
 		colliders.push(new CollisionObject(Math.round(pos.x), Math.round(pos.y), Math.round(size.x), Math.round(size.y)));
 	}
 
+	override function destroy(?from_parent: Bool) {
+		super.destroy(from_parent);
+		resetLevel();
+	}
+
 	function resetLevel() {
 		selected = null;
 		for(c in colliders) {
