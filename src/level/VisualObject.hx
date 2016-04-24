@@ -95,6 +95,8 @@ class VisualObject extends Sprite implements EditableObject {
 					size: size,
 					centered: false
 				});
+				Main.leftBatcher.add(mirrorSprite.geometry);
+				Main.rightBatcher.add(mirrorSprite.geometry);
 				setMirrorPos();
 			}
 			else {
@@ -118,6 +120,11 @@ class VisualObject extends Sprite implements EditableObject {
 	public function destroyObject() {
 		Main.leftBatcher.remove(this.geometry);
 		Main.rightBatcher.remove(this.geometry);
+		if(mirrorSprite != null) {
+			Main.leftBatcher.remove(mirrorSprite.geometry);
+			Main.rightBatcher.remove(mirrorSprite.geometry);
+			mirrorSprite.destroy();
+		}
 		destroy();
 	}
 }

@@ -103,7 +103,7 @@ class Level extends Entity {
 			   label: { color:new Color().rgb(0x06b4fb) },
 			   close_button: { color:new Color().rgb(0x06b4fb) },
 		   },
-		   x: 5, y: 5, w: 100, h: 300,
+		   x: 5, y: 5, w: 150, h: 300,
 		   w_min: 100, h_min: 100,
 		   collapsible: false,
 		   closable: false
@@ -182,6 +182,17 @@ class Level extends Entity {
 			w: 25, h:15
 		});
 
+		var resetButton = new mint.Button({
+			parent: stampWindow,
+			name: 'resetbutton',
+			text: ' reset ',
+			options: {
+			  	color:new Color().rgb(0x121212)
+		  	},
+			x: 80,
+			w: 25, h:15
+		});
+
 		saveButton.onmousedown.listen(function(_, _) {
 			trace('save');
 			pickSave();
@@ -190,6 +201,11 @@ class Level extends Entity {
 		loadButton.onmousedown.listen(function(_, _) {
 			trace('load');
 			pickLevel();
+		});
+
+		resetButton.onmousedown.listen(function(_, _) {
+			trace('reset');
+			resetLevel();
 		});
 
 		stamp = new Sprite({

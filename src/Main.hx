@@ -112,7 +112,8 @@ class Main extends luxe.Game {
 			centered: false,
 			pos: new Vector(0, 0),
 			texture: sceneView,
-			size: new Vector(gameResolution.x * 2, gameResolution.y * 2)
+			size: new Vector(gameResolution.x * 2, gameResolution.y * 2),
+			depth: 1
 		});
 
 		rightCamera = new Camera({name: 'rightCamera'});
@@ -133,7 +134,8 @@ class Main extends luxe.Game {
 			centered: false,
 			pos: new Vector(0,0),
 			texture: rightView,
-			size: new Vector(rightView.width*zoom,rightView.height*zoom)
+			size: new Vector(rightView.width*zoom,rightView.height*zoom),
+			depth: 2
 		});
 		rightSprite.pos.x = wrapPoint*zoom;
 
@@ -155,7 +157,8 @@ class Main extends luxe.Game {
 			centered: false,
 			pos: new Vector(0,0),
 			texture: leftView,
-			size: new Vector(leftView.width*zoom,leftView.height*zoom)
+			size: new Vector(leftView.width*zoom,leftView.height*zoom),
+			depth: -1
 		});
 		leftSprite.pos.x = -leftSprite.size.x;
 	}
@@ -248,16 +251,19 @@ class Main extends luxe.Game {
 
 	var _transparent: Color = new Color(0,0,0,0);
 	override function onrender() {
+		Luxe.renderer.target = leftView;
+		Luxe.renderer.clear(new Color(0,0,1,1));
+		leftBatcher.draw();
 		Luxe.renderer.target = sceneView;
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		sceneBatcher.draw();
 		Luxe.renderer.target = rightView;
-		Luxe.renderer.clear(new Color(0,0,0,0));
+		Luxe.renderer.clear(new Color(1,0,0,1));
 		rightBatcher.draw();
-		Luxe.renderer.target = leftView;
-		Luxe.renderer.clear(new Color(0,0,0,0));
-		leftBatcher.draw();
 		Luxe.renderer.target = null;
+	}
+
+	override function onpostrender() {
 	}
 
 	override function ondestroy() {
