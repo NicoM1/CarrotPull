@@ -252,13 +252,13 @@ class Main extends luxe.Game {
 	var _transparent: Color = new Color(0,0,0,0);
 	override function onrender() {
 		Luxe.renderer.target = leftView;
-		Luxe.renderer.clear(new Color(0,0,1,1));
+		Luxe.renderer.clear(new Color(0,0,0,0));
 		leftBatcher.draw();
 		Luxe.renderer.target = sceneView;
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		sceneBatcher.draw();
 		Luxe.renderer.target = rightView;
-		Luxe.renderer.clear(new Color(1,0,0,1));
+		Luxe.renderer.clear(new Color(0,0,0,0));
 		rightBatcher.draw();
 		Luxe.renderer.target = null;
 	}
