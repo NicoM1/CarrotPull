@@ -62,7 +62,7 @@ class Main extends luxe.Game {
 	var leftCamera: Camera;
 	public static var leftBatcher: Batcher;
 
-	var wrapPoint: Int = 300;
+	public static var wrapPoint(default, null): Int = 300;
 
     override function config(config:luxe.AppConfig) {
 		config.window.resizable = false;

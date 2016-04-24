@@ -11,6 +11,8 @@ class VisualObject extends Sprite implements EditableObject {
 
 	var dragging: Bool = false;
 
+	var mirrorSprite: Sprite;
+
 	public function new(texturePath: String, pos: Vector, size: Vector, depth: Float) {
 		super({
 			name: texturePath,
@@ -28,6 +30,8 @@ class VisualObject extends Sprite implements EditableObject {
 
 		Main.rightBatcher.add(this.geometry);
 		Main.leftBatcher.add(this.geometry);
+
+		adjustMirrorSprite();
 	}
 
 	var tmpVector: Vector = new Vector();
@@ -70,6 +74,8 @@ class VisualObject extends Sprite implements EditableObject {
 
 					pos.x = Math.round(tmpVector.x - size.x/2);
 					pos.y = Math.round(tmpVector.y - size.y/2);
+
+					adjustMirrorSprite();
 				}
 			}
 			else {
@@ -77,6 +83,36 @@ class VisualObject extends Sprite implements EditableObject {
 				Level.instance.selected = null;
 			}
 		}
+	}
+
+	function adjustMirrorSprite() {
+		if(pos.x < Main.wrapPoint && pos.x + size.x > Main.wrapPoint) {
+			if(mirrorSprite == null) {
+				mirrorSprite = new Sprite({
+					batcher: Main.sceneBatcher,
+					pos: new Vector(),
+					texture: texture,
+					size: size,
+					centered: false
+				});
+				setMirrorPos();
+			}
+			else {
+				setMirrorPos();
+			}
+		}
+		else {
+			if(mirrorSprite != null) {
+				mirrorSprite.destroy();
+				mirrorSprite = null;
+			}
+		}
+	}
+
+	function setMirrorPos() {
+		mirrorSprite.pos.x = pos.x - Main.wrapPoint;
+		mirrorSprite.pos.y = pos.y;
+		mirrorSprite.depth = depth;
 	}
 
 	public function destroyObject() {
