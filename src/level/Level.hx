@@ -329,6 +329,7 @@ class Level extends Entity {
 	}
 
 	function resetLevel() {
+		Main.wrapPoint = 300;
 		selected = null;
 		for(c in colliders) {
 			c.destroyObject();

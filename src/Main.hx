@@ -49,7 +49,7 @@ class Main extends luxe.Game {
 
 	static var sceneView: RenderTexture;
 	static var sceneSprite: Sprite;
-	static var sceneCamera: Camera;
+	public static var sceneCamera: Camera;
 	public static var sceneBatcher: Batcher;
 
 	static var rightView: RenderTexture;
@@ -62,7 +62,7 @@ class Main extends luxe.Game {
 	static var leftCamera: Camera;
 	public static var leftBatcher: Batcher;
 
-	public static var wrapPoint(default, set): Int = 600;
+	public static var wrapPoint(default, set): Int = 300;
 
     override function config(config:luxe.AppConfig) {
 		config.window.resizable = false;
@@ -118,7 +118,7 @@ class Main extends luxe.Game {
 		shapeDrawer.setBatcher(sceneBatcher);
 		sceneView = new RenderTexture({
 			id: 'sceneView',
-			width: Math.floor(wrapPoint + 100),
+			width: Math.floor(gameResolution.x),
 			height: Math.floor(gameResolution.y)
 		});
 		sceneView.filter_mag = FilterType.nearest;
@@ -126,7 +126,7 @@ class Main extends luxe.Game {
 			centered: false,
 			pos: new Vector(0, 0),
 			texture: sceneView,
-			size: new Vector((wrapPoint + 100)*zoom, gameResolution.y * zoom),
+			size: new Vector(gameResolution.x*zoom, gameResolution.y * zoom),
 			depth: 1
 		});
 
@@ -150,10 +150,8 @@ class Main extends luxe.Game {
 			size: new Vector(rightView.width*zoom,rightView.height*zoom),
 			depth: 2
 		});
-		rightSprite.pos.x = wrapPoint*zoom;
 
 		leftCamera = new Camera({name: 'leftCamera'});
-		leftCamera.pos.set_xy(wrapPoint-gameResolution.x/2,0);
 		leftCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y);
 		leftBatcher = Luxe.renderer.create_batcher({
 			name: 'leftBatcher',
@@ -173,29 +171,9 @@ class Main extends luxe.Game {
 			size: new Vector(leftView.width*zoom,leftView.height*zoom),
 			depth: -1
 		});
-		leftSprite.pos.x = -leftSprite.size.x;
 	}
 
 	static function regenWrapping() {
-		trace('wrap');
-		sceneView.destroy(true);
-		sceneView = new RenderTexture({
-			id: 'sceneView',
-			width: Math.floor(wrapPoint + 100),
-			height: Math.floor(gameResolution.y)
-		});
-		sceneView.filter_mag = FilterType.nearest;
-		sceneSprite.destroy();
-		sceneSprite = new Sprite({
-			centered: false,
-			pos: new Vector(0, 0),
-			texture: sceneView,
-			size: new Vector((wrapPoint + 100)*zoom, gameResolution.y * zoom),
-			depth: 1
-		});
-		rightSprite.pos.x = wrapPoint*zoom;
-		leftCamera.pos.set_xy(wrapPoint-gameResolution.x/2,0);
-
 		Level.instance.adjustWrapping();
 	}
 
@@ -225,8 +203,7 @@ class Main extends luxe.Game {
 	}
 
 	public static function screen_point_to_world(point: Vector) {
-		point = Luxe.camera.screen_point_to_world(point);
-		point.divideScalar(zoom);
+		point = sceneCamera.screen_point_to_world(point.clone().divideScalar(zoom));
 		return point;
 	}
 
@@ -291,6 +268,9 @@ class Main extends luxe.Game {
 	}*/
 
     override function update(dt:Float) {
+		rightSprite.pos.x = (-sceneCamera.pos.x + wrapPoint)*zoom;
+		leftSprite.pos.x = -leftSprite.size.x - sceneCamera.pos.x*zoom;
+		leftCamera.pos.x = wrapPoint - gameResolution.x/2;
     }
 
 	var _transparent: Color = new Color(0,0,0,0);
