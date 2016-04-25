@@ -47,22 +47,22 @@ class Main extends luxe.Game {
 	var UIBatcher: Batcher;
 	var UICamera: Camera;
 
-	var sceneView: RenderTexture;
-	var sceneSprite: Sprite;
-	var sceneCamera: Camera;
+	static var sceneView: RenderTexture;
+	static var sceneSprite: Sprite;
+	static var sceneCamera: Camera;
 	public static var sceneBatcher: Batcher;
 
-	var rightView: RenderTexture;
-	var rightSprite: Sprite;
-	var rightCamera: Camera;
+	static var rightView: RenderTexture;
+	static var rightSprite: Sprite;
+	static var rightCamera: Camera;
 	public static var rightBatcher: Batcher;
 
-	var leftView: RenderTexture;
-	var leftSprite: Sprite;
-	var leftCamera: Camera;
+	static var leftView: RenderTexture;
+	static var leftSprite: Sprite;
+	static var leftCamera: Camera;
 	public static var leftBatcher: Batcher;
 
-	public static var wrapPoint(default, null): Int = 300;
+	public static var wrapPoint(default, set): Int = 600;
 
     override function config(config:luxe.AppConfig) {
 		config.window.resizable = false;
@@ -102,6 +102,12 @@ class Main extends luxe.Game {
 		player = new Player(new Vector(60,10));
     }
 
+	static function set_wrapPoint(v: Int): Int {
+		wrapPoint = v;
+		regenWrapping();
+		return v;
+	}
+
 	function setupWrapping() {
 		sceneCamera = new Camera({name: 'sceneCamera'});
 		sceneBatcher = Luxe.renderer.create_batcher({
@@ -112,7 +118,7 @@ class Main extends luxe.Game {
 		shapeDrawer.setBatcher(sceneBatcher);
 		sceneView = new RenderTexture({
 			id: 'sceneView',
-			width: Math.floor(gameResolution.x),
+			width: Math.floor(wrapPoint + 100),
 			height: Math.floor(gameResolution.y)
 		});
 		sceneView.filter_mag = FilterType.nearest;
@@ -120,12 +126,11 @@ class Main extends luxe.Game {
 			centered: false,
 			pos: new Vector(0, 0),
 			texture: sceneView,
-			size: new Vector(gameResolution.x * 2, gameResolution.y * 2),
+			size: new Vector((wrapPoint + 100)*zoom, gameResolution.y * zoom),
 			depth: 1
 		});
 
 		rightCamera = new Camera({name: 'rightCamera'});
-		//rightCamera.pos.set_xy(50,50);
 		rightCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y);
 		rightBatcher = Luxe.renderer.create_batcher({
 			name: 'rightBatcher',
@@ -171,7 +176,38 @@ class Main extends luxe.Game {
 		leftSprite.pos.x = -leftSprite.size.x;
 	}
 
+	static function regenWrapping() {
+		trace('wrap');
+		sceneView.destroy(true);
+		sceneView = new RenderTexture({
+			id: 'sceneView',
+			width: Math.floor(wrapPoint + 100),
+			height: Math.floor(gameResolution.y)
+		});
+		sceneView.filter_mag = FilterType.nearest;
+		sceneSprite.destroy();
+		sceneSprite = new Sprite({
+			centered: false,
+			pos: new Vector(0, 0),
+			texture: sceneView,
+			size: new Vector((wrapPoint + 100)*zoom, gameResolution.y * zoom),
+			depth: 1
+		});
+		rightSprite.pos.x = wrapPoint*zoom;
+		leftCamera.pos.set_xy(wrapPoint-gameResolution.x/2,0);
+
+		Level.instance.adjustWrapping();
+	}
+
     override function onkeyup( e: luxe.KeyEvent ) {
+		if(e.keycode == Key.equals) {
+			wrapPoint += 50;
+			regenWrapping();
+		}
+		if(e.keycode == Key.minus) {
+			wrapPoint -= 50;
+			regenWrapping();
+		}
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }

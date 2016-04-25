@@ -45,5 +45,9 @@ class Player extends Sprite {
 		if(pos.x < 0) {
 			pos.x = Main.wrapPoint + pos.x;
 		}
+
+		if(pos.y > 500) {
+			pos.y = 0;
+		}
 	}
 }

@@ -98,6 +98,12 @@ class Level extends Entity {
 		}
 	}
 
+	public function adjustWrapping() {
+		for(v in visuals) {
+			v.adjustWrapping();
+		}
+	}
+
 	var visualToggleButton: mint.Checkbox;
 	function setupUI() {
 		var canvas = Main.canvas;
@@ -357,6 +363,9 @@ class Level extends Entity {
 			};
 			final.visuals.push(vObject);
 		}
+
+		final.wrapPoint = Main.wrapPoint;
+
 		return(final);
 	}
 
@@ -370,6 +379,10 @@ class Level extends Entity {
 		}
 		for(v in jsonO.visuals) {
 			addVisual(v.tex, new Vector(v.pos.x, v.pos.y), new Vector(v.size.x, v.size.y), v.depth);
+		}
+
+		if(jsonO.wrapPoint != null) {
+			Main.wrapPoint = jsonO.wrapPoint;
 		}
 		trace('done');
 		loading = false;
@@ -459,7 +472,8 @@ typedef StampInfo = {
 
 typedef LevelInfo = {
 	visuals: Array<VisualInfo>,
-	colliders: Array<ColliderInfo>
+	colliders: Array<ColliderInfo>,
+	?wrapPoint: Int
 }
 
 typedef VisualInfo = {
