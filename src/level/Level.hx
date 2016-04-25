@@ -355,6 +355,7 @@ class Level extends Entity {
 		}
 
 		for(v in visuals) {
+			if(v.pos.x > Main.wrapPoint || v.pos.x + v.size.x < 0) continue;
 			var vObject: VisualInfo = {
 				tex: v.texturePath,
 				pos: { x: Math.round(v.pos.x), y: Math.round(v.pos.y) },
