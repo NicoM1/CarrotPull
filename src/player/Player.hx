@@ -17,7 +17,8 @@ class Player extends Sprite {
 			pos: _pos,
 			size: new Vector(19,31),
 			centered: false,
-			batcher: Main.sceneBatcher
+			batcher: Main.sceneBatcher,
+			depth: 0
 		});
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
 		//Main.rightBatcher.add(this.geometry);

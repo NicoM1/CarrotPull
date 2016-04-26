@@ -14,6 +14,7 @@ import dialogs.Dialogs;
 import shared.Util;
 
 import phoenix.Texture;
+import phoenix.geometry.LineGeometry;
 
 import mint.layout.margins.Margins;
 
@@ -43,6 +44,9 @@ class Level extends Entity {
 	var conversation: conversation.ConversationTree;
 
 	var stamp: Sprite;
+
+	var leftLine: LineGeometry;
+	var rightLine: LineGeometry;
 
 	var stamps: Array<StampInfo> = [
 		// { id: 'assets/images/plant.png', w: 15, h: 55 },
@@ -99,6 +103,21 @@ class Level extends Entity {
 	}
 
 	public function adjustWrapping() {
+		if(leftLine != null) {
+			leftLine.drop(true);
+			rightLine.drop(true);
+		}
+		leftLine = Luxe.draw.line({
+			p0: new Vector(Main.wrapPoint, 0),
+			p1: new Vector(Main.wrapPoint, Main.gameResolution.y),
+			batcher: Main.sceneBatcher
+		});
+
+		rightLine = Luxe.draw.line({
+			p0: new Vector(0, 0),
+			p1: new Vector(0, Main.gameResolution.y),
+			batcher: Main.sceneBatcher
+		});
 		for(v in visuals) {
 			v.adjustWrapping();
 		}
@@ -290,6 +309,7 @@ class Level extends Entity {
 		else {
 			trace('level ($path) null');
 		}
+		adjustWrapping();
 	}
 
 	function editModeChanged(visual: Bool) {
@@ -408,6 +428,8 @@ class Level extends Entity {
 			stamp.visible = !playMode;
 		}
 		if(!playMode) {
+			leftLine.visible = true;
+			rightLine.visible = true;
 			stampWindow.visible = true;
 			if(Luxe.input.keypressed(Key.key_v)) {
 				visualToggleButton.state = !visualToggleButton.state;
@@ -459,6 +481,8 @@ class Level extends Entity {
 			}
 		}
 		else {
+			leftLine.visible = false;
+			rightLine.visible = false;
 			stampWindow.visible = false;
 		}
 

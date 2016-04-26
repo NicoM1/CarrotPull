@@ -148,7 +148,7 @@ class Main extends luxe.Game {
 			pos: new Vector(0,0),
 			texture: rightView,
 			size: new Vector(rightView.width*zoom,rightView.height*zoom),
-			depth: 2
+			depth: -1
 		});
 
 		leftCamera = new Camera({name: 'leftCamera'});
@@ -278,12 +278,12 @@ class Main extends luxe.Game {
 		Luxe.renderer.target = leftView;
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		leftBatcher.draw();
-		Luxe.renderer.target = sceneView;
-		Luxe.renderer.clear(new Color(0,0,0,0));
-		sceneBatcher.draw();
 		Luxe.renderer.target = rightView;
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		rightBatcher.draw();
+		Luxe.renderer.target = sceneView;
+		Luxe.renderer.clear(new Color(0,0,0,0));
+		sceneBatcher.draw();
 		Luxe.renderer.target = null;
 	}
 
