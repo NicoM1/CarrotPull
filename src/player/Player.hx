@@ -54,7 +54,7 @@ class Player extends Sprite {
 	}
 
 	public function adjustMirrorSprite() {
-		if(((pos.x < Main.wrapPoint && pos.x + size.x > Main.wrapPoint) || (pos.x < 0 && pos.x + size.x > 0))) {
+		if(((pos.x <= Main.wrapPoint && pos.x + size.x > Main.wrapPoint) || (pos.x < 0 && pos.x + size.x > 0))) {
 			if(mirrorSprite == null) {
 				mirrorSprite = new Sprite({
 					batcher: Main.sceneBatcher,
