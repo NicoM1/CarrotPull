@@ -66,6 +66,9 @@ class VisualObject extends Sprite implements EditableObject {
 					if(Luxe.input.keypressed(Key.period)) {
 						depth += 0.00001;
 					}
+					if(Luxe.input.keypressed(Key.slash)) {
+						depth = 0;
+					}
 					if(Luxe.input.keypressed(Key.key_x)) {
 						Level.instance.toDestroy.push(this);
 						return;
