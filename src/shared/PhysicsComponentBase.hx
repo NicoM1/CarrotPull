@@ -9,10 +9,13 @@ import luxe.Vector;
 import luxe.Sprite;
 
 import level.Level;
+import player.Player;
 
 class PhysicsComponentBase extends Component {
 	public var velocity: Vector = new Vector();
 	public var damper: Float = 200;
+
+	var player: Player;
 
 	public var gravity: Float = 400;
 
@@ -31,6 +34,7 @@ class PhysicsComponentBase extends Component {
 
 	override function init() {
 		sprite = cast entity;
+		player = cast sprite;
 	}
 
 	override function update(dt: Float) {
@@ -100,6 +104,7 @@ class PhysicsComponentBase extends Component {
 			}
 		}
 		Main.sceneCamera.pos.x = pos.x -Main.gameResolution.x/2;
+		player.adjustMirrorSprite();
 	}
 
 	inline function alignCollider() {

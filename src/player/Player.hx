@@ -10,6 +10,7 @@ import shared.PhysicsComponentBase;
 class Player extends Sprite {
 
 	var physics: PhysicsComponentBase;
+	var mirrorSprite: Sprite;
 
 	public function new(_pos: Vector) {
 		super({
@@ -50,5 +51,54 @@ class Player extends Sprite {
 		if(pos.y > 500) {
 			pos.y = 0;
 		}
+	}
+
+	public function adjustMirrorSprite() {
+		if(((pos.x < Main.wrapPoint && pos.x + size.x > Main.wrapPoint) || (pos.x < 0 && pos.x + size.x > 0))) {
+			if(mirrorSprite == null) {
+				mirrorSprite = new Sprite({
+					batcher: Main.sceneBatcher,
+					pos: new Vector(),
+					texture: texture,
+					size: size,
+					centered: false
+				});
+				Main.leftBatcher.add(mirrorSprite.geometry);
+				Main.rightBatcher.add(mirrorSprite.geometry);
+				setMirrorPos();
+			}
+			else {
+				setMirrorPos();
+			}
+		}
+		else {
+			if(mirrorSprite != null) {
+				destroyMirrorSprite();
+			}
+		}
+	}
+
+	function setMirrorPos() {
+		if(pos.x < Main.wrapPoint && pos.x + size.x > Main.wrapPoint) {
+			mirrorSprite.pos.x = pos.x - Main.wrapPoint;
+		}
+		else if(pos.x < 0 && pos.x + size.x > 0) {
+			mirrorSprite.pos.x = Main.wrapPoint + pos.x;
+		}
+		mirrorSprite.pos.y = pos.y;
+		mirrorSprite.depth = depth;
+	}
+
+	override function destroy(?a) {
+		super.destroy(a);
+		if(mirrorSprite != null)
+			destroyMirrorSprite();
+	}
+
+	function destroyMirrorSprite() {
+		Main.leftBatcher.remove(mirrorSprite.geometry);
+		Main.rightBatcher.remove(mirrorSprite.geometry);
+		mirrorSprite.destroy();
+		mirrorSprite = null;
 	}
 }

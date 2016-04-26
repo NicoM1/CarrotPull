@@ -148,7 +148,7 @@ class Main extends luxe.Game {
 			pos: new Vector(0,0),
 			texture: rightView,
 			size: new Vector(rightView.width*zoom,rightView.height*zoom),
-			depth: -1
+			depth: 2
 		});
 
 		leftCamera = new Camera({name: 'leftCamera'});
@@ -169,7 +169,7 @@ class Main extends luxe.Game {
 			pos: new Vector(0,0),
 			texture: leftView,
 			size: new Vector(leftView.width*zoom,leftView.height*zoom),
-			depth: -1
+			depth: 2
 		});
 	}
 
