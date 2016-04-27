@@ -61,7 +61,7 @@ class Level extends Entity {
 		{ id: 'assets/images/worldWrap128x64_5.png', w: 128, h: 64 },
 		{ id: 'assets/images/worldWrap128x64_6.png', w: 128, h: 64 },
 		{ id: 'assets/images/worldWrap128x64_7.png', w: 128, h: 64 },
-
+		{ id: 'assets/images/worldWrap128x64_8.png', w: 128, h: 64 },
 	];
 
 	var visualEditing: Bool = true;
@@ -278,7 +278,7 @@ class Level extends Entity {
 				setCurrent(path);
 				changed = false;
 			}
-			Util.saveFile(Json.stringify(makeJSON()), path);
+			Util.saveFile(Json.stringify(makeJSON(), '\t'), path);
 		}
 	}
 
@@ -309,6 +309,8 @@ class Level extends Entity {
 		else {
 			trace('level ($path) null');
 		}
+		var cube = new Cube(new Vector(237,110), -1);
+		visuals.push(cube);
 		adjustWrapping();
 	}
 
@@ -361,7 +363,7 @@ class Level extends Entity {
 		visuals = [];
 	}
 
-	function makeJSON() {
+	function makeJSON(): LevelInfo {
 		var final: LevelInfo = {
 			colliders: [],
 			visuals: []
@@ -376,6 +378,7 @@ class Level extends Entity {
 		}
 
 		for(v in visuals) {
+			if(v.dontSave) continue;
 			if(v.pos.x > Main.wrapPoint || v.pos.x + v.size.x < 0) continue;
 			var vObject: VisualInfo = {
 				tex: v.texturePath,

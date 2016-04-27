@@ -9,6 +9,8 @@ import phoenix.Texture;
 class VisualObject extends Sprite implements EditableObject {
 	public var texturePath(default, null): String;
 
+	public var dontSave(default, null): Bool = false;
+
 	var dragging: Bool = false;
 
 	var mirrorSprite: Sprite;

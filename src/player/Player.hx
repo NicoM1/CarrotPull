@@ -42,14 +42,20 @@ class Player extends Sprite {
 		}
 
 		if(pos.x > Main.wrapPoint) {
+			Luxe.events.fire('player.wrap.right', {object: this});
 			pos.x = pos.x - Main.wrapPoint;
 		}
 		if(pos.x < 0) {
+			Luxe.events.fire('player.wrap.left', {object: this});
 			pos.x = Main.wrapPoint + pos.x;
 		}
 
 		if(pos.y > 500) {
 			pos.y = 0;
+		}
+
+		if(Luxe.input.keypressed(Key.key_e)) {
+			Luxe.events.fire('player.interact', {object: this});
 		}
 	}
 
