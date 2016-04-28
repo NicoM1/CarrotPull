@@ -310,7 +310,6 @@ class Level extends Entity {
 			trace('level ($path) null');
 		}
 		var cube = new Cube(new Vector(237,110), -1);
-		visuals.push(cube);
 		adjustWrapping();
 	}
 
@@ -332,7 +331,7 @@ class Level extends Entity {
 			lastDepth += 0.00001;
 			depth = lastDepth;
 		}
-		visuals.push(new VisualObject(texture, pos, size, depth));
+		new VisualObject(texture, pos, size, depth);
 	}
 
 	function addCollider(pos: Vector, size: Vector, ?centered: Bool = false) {

@@ -7,10 +7,14 @@ import luxe.Color;
 
 import shared.PhysicsComponentBase;
 
+import level.VisualObject;
+
 class Player extends Sprite {
 
 	var physics: PhysicsComponentBase;
 	var mirrorSprite: Sprite;
+
+	var boxSprite: VisualObject;
 
 	public function new(_pos: Vector) {
 		super({
@@ -24,6 +28,16 @@ class Player extends Sprite {
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
 		//Main.rightBatcher.add(this.geometry);
 		//Main.leftBatcher.add(this.geometry);
+	}
+
+	public function gotBox() {
+		boxSprite = new VisualObject('assets/images/worldWrap128x64_9.png', pos, new Vector(128,64), 1);
+		boxSprite.dontSave = true;
+	}
+
+	public function lostBox() {
+		boxSprite.destroyObject();
+		boxSprite = null;
 	}
 
 
@@ -52,6 +66,10 @@ class Player extends Sprite {
 
 		if(pos.y > 500) {
 			pos.y = 0;
+		}
+
+		if(boxSprite != null) {
+			boxSprite.pos.copy_from(pos);
 		}
 
 		if(Luxe.input.keypressed(Key.key_e)) {

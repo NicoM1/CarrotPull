@@ -9,11 +9,13 @@ import phoenix.Texture;
 class VisualObject extends Sprite implements EditableObject {
 	public var texturePath(default, null): String;
 
-	public var dontSave(default, null): Bool = false;
+	public var dontSave(default, default): Bool = false;
 
 	var dragging: Bool = false;
 
 	var mirrorSprite: Sprite;
+
+	var lastPos: Vector = new Vector();
 
 	public function new(texturePath: String, pos: Vector, size: Vector, depth: Float) {
 		super({
@@ -34,6 +36,15 @@ class VisualObject extends Sprite implements EditableObject {
 		Main.leftBatcher.add(this.geometry);
 
 		adjustMirrorSprite();
+
+		Level.instance.visuals.push(this);
+	}
+
+	override function update(dt: Float) {
+		if(pos.x != lastPos.x || pos.y != lastPos.y) {
+			adjustMirrorSprite();
+		}
+		lastPos.set_xy(pos.x, pos.y);
 	}
 
 	var tmpVector: Vector = new Vector();
@@ -120,6 +131,8 @@ class VisualObject extends Sprite implements EditableObject {
 	}
 
 	function setMirrorPos() {
+		mirrorSprite.texture = texture;
+		mirrorSprite.visible = visible;
 		if(pos.x < Main.wrapPoint && pos.x + size.x > Main.wrapPoint) {
 			mirrorSprite.pos.x = pos.x - Main.wrapPoint;
 		}

@@ -86,6 +86,8 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_6.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_7.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_8.png'});
+		config.preload.textures.push({id: 'assets/images/worldWrap128x64_9.png'});
+		config.preload.textures.push({id: 'assets/images/worldWrap128x64_10.png'});
         return config;
     }
 
