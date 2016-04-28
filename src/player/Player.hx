@@ -26,6 +26,13 @@ class Player extends Sprite {
 			depth: 0
 		});
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
+		physics.afterMovement = function() {
+			Main.sceneCamera.pos.x = pos.x -Main.gameResolution.x/2;
+			if(boxSprite != null) {
+				boxSprite.pos.copy_from(pos);
+				boxSprite.adjustWrapping();
+			}
+		}
 		//Main.rightBatcher.add(this.geometry);
 		//Main.leftBatcher.add(this.geometry);
 	}
@@ -66,10 +73,6 @@ class Player extends Sprite {
 
 		if(pos.y > 500) {
 			pos.y = 0;
-		}
-
-		if(boxSprite != null) {
-			boxSprite.pos.copy_from(pos);
 		}
 
 		if(Luxe.input.keypressed(Key.key_e)) {
