@@ -15,6 +15,8 @@ class Cube extends VisualObject {
 
 	var originalPos: Vector;
 
+	var button: VisualObject;
+
 	public function new(pos: Vector, depth: Float) {
 		super('assets/images/worldWrap128x64_7.png', pos, new Vector(128,64), depth);
 		originalPos = pos.clone();
@@ -32,6 +34,9 @@ class Cube extends VisualObject {
 					o.object.lostBox();
 					setMirrorPos();
 					inPlace = true;
+					button = new VisualObject('assets/images/worldWrap128x64_11.png', new Vector(pos.x, pos.y + size.y), new Vector(128,64), -1);
+					button.dontSave = true;
+					button.adjustWrapping();
 				}
 				else {
 					texture = Luxe.resources.texture('assets/images/worldWrap128x64_8.png');
@@ -61,6 +66,9 @@ class Cube extends VisualObject {
 		else if(slideUp && pos.y > originalPos.y) {
 			pos.y -= slideSpeed * dt;
 			adjustMirrorSprite();
+		}
+		if(inPlace && button.pos.y > pos.y) {
+			button.pos.y -= slideSpeed * dt;
 		}
 	}
 }
