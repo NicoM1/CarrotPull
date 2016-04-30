@@ -89,6 +89,7 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_9.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_10.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_11.png'});
+		//config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'assets/shaders/base.glsl', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
 
@@ -130,7 +131,8 @@ class Main extends luxe.Game {
 			pos: new Vector(0, 0),
 			texture: sceneView,
 			size: new Vector(gameResolution.x*zoom, gameResolution.y * zoom),
-			depth: 1
+			depth: 1,
+			//shader: Luxe.resources.shader('assets/shaders/base.glsl')
 		});
 
 		rightCamera = new Camera({name: 'rightCamera'});
@@ -148,9 +150,10 @@ class Main extends luxe.Game {
 		rightView.filter_mag = FilterType.nearest;
 		rightSprite = new Sprite({
 			centered: false,
+			batcher: sceneBatcher,
 			pos: new Vector(0,0),
 			texture: rightView,
-			size: new Vector(rightView.width*zoom,rightView.height*zoom),
+			size: new Vector(rightView.width,rightView.height),
 			depth: 2
 		});
 
@@ -168,16 +171,23 @@ class Main extends luxe.Game {
 		});
 		leftView.filter_mag = FilterType.nearest;
 		leftSprite = new Sprite({
+			batcher: sceneBatcher,
 			centered: false,
 			pos: new Vector(0,0),
 			texture: leftView,
-			size: new Vector(leftView.width*zoom,leftView.height*zoom),
+			size: new Vector(leftView.width,leftView.height),
 			depth: 2
 		});
+		regenWrapping();
 	}
 
 	static function regenWrapping() {
-		Level.instance.adjustWrapping();
+		rightSprite.pos.x = wrapPoint;
+		leftSprite.pos.x = -leftSprite.size.x;
+		leftCamera.pos.x = wrapPoint - gameResolution.x/2;
+		if(Level.instance != null) {
+			Level.instance.adjustWrapping();
+		}
 	}
 
     override function onkeyup( e: luxe.KeyEvent ) {
@@ -271,9 +281,6 @@ class Main extends luxe.Game {
 	}*/
 
     override function update(dt:Float) {
-		rightSprite.pos.x = (-sceneCamera.pos.x + wrapPoint)*zoom;
-		leftSprite.pos.x = -leftSprite.size.x - sceneCamera.pos.x*zoom;
-		leftCamera.pos.x = wrapPoint - gameResolution.x/2;
     }
 
 	var _transparent: Color = new Color(0,0,0,0);
