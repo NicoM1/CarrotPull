@@ -35,6 +35,8 @@ class Level extends Entity {
 
 	var playMode: Bool = false;
 
+	var loaded: Bool = false;
+
 	var current: String;
 
 	var loading: Bool = false;
@@ -305,6 +307,7 @@ class Level extends Entity {
 		if(data != null) {
 			setCurrent(path);
 			parseJSON(data);
+			loaded = true;
 		}
 		else {
 			trace('level ($path) null');
@@ -345,13 +348,18 @@ class Level extends Entity {
 	}
 
 	override function destroy(?from_parent: Bool) {
+		destroyLevel();
+		stamp.destroy();
 		super.destroy(from_parent);
-		resetLevel();
 	}
 
 	function resetLevel() {
 		Main.wrapPoint = 300;
 		selected = null;
+		destroyLevel();
+	}
+
+	function destroyLevel() {
 		for(c in colliders) {
 			c.destroyObject();
 		}
@@ -415,6 +423,7 @@ class Level extends Entity {
 	var timer: Float = 0;
 	var tmpVector: Vector = new Vector();
 	override function update(dt : Float) {
+		if(!loaded) return;
 		if(!playMode) {
 			timer += dt;
 			if(timer > 10) {

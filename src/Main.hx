@@ -305,8 +305,5 @@ class Main extends luxe.Game {
 			SDL.showSimpleMessageBox(SDLMessageBoxFlags.SDL_MESSAGEBOX_ERROR, 'quit without saving?', 'are you sure you wish to quit?', Luxe.snow.runtime.window);
 
 		Level.instance.destroy();
-		for(e in Luxe.scene.entities) {
-			e.destroy();
-		}
     }
 }

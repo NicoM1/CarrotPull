@@ -131,6 +131,7 @@ class VisualObject extends Sprite implements EditableObject {
 	}
 
 	function setMirrorPos() {
+		if(mirrorSprite == null) return;
 		mirrorSprite.texture = texture;
 		mirrorSprite.visible = visible;
 		if(pos.x <= Main.wrapPoint && pos.x + size.x >= Main.wrapPoint) {
@@ -149,7 +150,6 @@ class VisualObject extends Sprite implements EditableObject {
 		if(mirrorSprite != null) {
 			destroyMirrorSprite();
 		}
-		Level.instance.visuals.remove(this);
 		destroy();
 	}
 

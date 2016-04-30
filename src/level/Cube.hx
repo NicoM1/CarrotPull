@@ -50,7 +50,7 @@ class Cube extends VisualObject {
 			}
 			else if(slideDown) {
 				texture = Luxe.resources.texture('assets/images/worldWrap128x64_4.png');
-				mirrorSprite.texture = texture;
+				setMirrorPos();
 				slideDown = false;
 				slideUp = true;
 			}
