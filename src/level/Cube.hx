@@ -17,49 +17,28 @@ class Cube extends VisualObject {
 
 	var button: VisualObject;
 
-	public function new(pos: Vector, depth: Float) {
-		super('assets/images/worldWrap128x64_7.png', pos, new Vector(128,64), depth);
-		originalPos = pos.clone();
+	var collider: CollisionObject;
+
+	public function new(position: Vector, depth: Float) {
+		super('assets/images/worldWrap128x64_7.png', position, new Vector(128,64), depth);
+		originalPos = position.clone();
 		dontSave = true;
-		Luxe.events.listen('player.interact', function(o: {object: Player}) {
-			if(Math.abs((pos.x + size.x/2) - (o.object.pos.x + o.object.size.x/2)) < 30) {
-				if(!gaveBox) {
-					texture = Luxe.resources.texture('assets/images/worldWrap128x64_10.png');
-					setMirrorPos();
-					o.object.gotBox();
-					gaveBox = true;
-				}
-				else if(!inPlace) {
-					texture = Luxe.resources.texture('assets/images/worldWrap128x64_7.png');
-					o.object.lostBox();
-					setMirrorPos();
-					inPlace = true;
-					button = new VisualObject('assets/images/worldWrap128x64_11.png', new Vector(pos.x, pos.y + size.y), new Vector(128,64), -1);
-					button.dontSave = true;
-					button.adjustWrapping();
-				}
-				else {
-					texture = Luxe.resources.texture('assets/images/worldWrap128x64_8.png');
-					triggered = true;
-				}
-			}
+		collider = Level.instance.addCollider(new Vector(pos.x + 54, pos.y), new Vector(15,64));
+
+		Luxe.events.listen('player.wrap.left', function(o: {object: Player}) {
+			collider.collider.y += collider.height;
+			pos.y += size.y;
 		});
-		Luxe.events.listen('player.wrap.*', function(o: {object: Player}) {
-			if(triggered && !slideDown) {
-				slideDown = true;
-			}
-			else if(slideDown) {
-				texture = Luxe.resources.texture('assets/images/worldWrap128x64_4.png');
-				setMirrorPos();
-				slideDown = false;
-				slideUp = true;
-			}
+
+		Luxe.events.listen('player.wrap.right', function(o: {object: Player}) {
+			collider.collider.y -= collider.height;
+			pos.y -= size.y;
 		});
 	}
 
 	override function update(dt: Float) {
 		super.update(dt);
-		if(pos.y <= Main.gameResolution.y - 80 && slideDown) {
+		/*if(pos.y <= Main.gameResolution.y - 80 && slideDown) {
 			pos.y += slideSpeed * dt;
 			adjustMirrorSprite();
 		}
@@ -69,6 +48,6 @@ class Cube extends VisualObject {
 		}
 		if(inPlace && button.pos.y > pos.y) {
 			button.pos.y -= slideSpeed * dt;
-		}
+		}*/
 	}
 }

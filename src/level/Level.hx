@@ -313,6 +313,7 @@ class Level extends Entity {
 			trace('level ($path) null');
 		}
 		var cube = new Cube(new Vector(237,110), -1);
+		new Switch(new Vector(200, 110));
 		adjustWrapping();
 	}
 
@@ -337,14 +338,16 @@ class Level extends Entity {
 		new VisualObject(texture, pos, size, depth);
 	}
 
-	function addCollider(pos: Vector, size: Vector, ?centered: Bool = false) {
+	public function addCollider(pos: Vector, size: Vector, ?centered: Bool = false): CollisionObject {
 		if(!loading)
 			changed = true;
 		if(centered) {
 			pos.x -= Math.round(size.x/2);
 			pos.y -= Math.round(size.y/2);
 		}
-		colliders.push(new CollisionObject(Math.round(pos.x), Math.round(pos.y), Math.round(size.x), Math.round(size.y)));
+		var collider: CollisionObject = new CollisionObject(Math.round(pos.x), Math.round(pos.y), Math.round(size.x), Math.round(size.y));
+		colliders.push(collider);
+		return collider;
 	}
 
 	override function destroy(?from_parent: Bool) {

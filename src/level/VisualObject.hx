@@ -28,7 +28,9 @@ class VisualObject extends Sprite implements EditableObject {
 			depth: depth,
 			batcher: Main.sceneBatcher
 		});
-		texture.filter_mag = FilterType.nearest;
+		if(texture != null) {
+			texture.filter_mag = FilterType.nearest;
+		}
 
 		this.texturePath = texturePath;
 
