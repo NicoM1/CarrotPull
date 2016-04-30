@@ -28,6 +28,7 @@ class Player extends Sprite {
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
 		physics.afterMovement = function() {
 			Main.sceneCamera.pos.x = pos.x -Main.gameResolution.x/2;
+			Main.sceneCamera.pos.y = pos.y -Main.gameResolution.y/2;
 			if(boxSprite != null) {
 				boxSprite.pos.copy_from(pos);
 				boxSprite.adjustWrapping();

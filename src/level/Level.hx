@@ -33,7 +33,7 @@ class Level extends Entity {
 
 	var stampWindow: ui.Window;
 
-	var playMode: Bool = false;
+	var playMode: Bool = true;
 
 	var loaded: Bool = false;
 
@@ -313,7 +313,6 @@ class Level extends Entity {
 			trace('level ($path) null');
 		}
 		var cube = new Cube(new Vector(237,110), -1);
-		new Switch(new Vector(200, 110));
 		adjustWrapping();
 	}
 
@@ -442,6 +441,7 @@ class Level extends Entity {
 			stamp.visible = !playMode;
 		}
 		if(!playMode) {
+			stamp.visible = true;
 			leftLine.visible = true;
 			rightLine.visible = true;
 			stampWindow.visible = true;
@@ -495,6 +495,7 @@ class Level extends Entity {
 			}
 		}
 		else {
+			stamp.visible = false;
 			leftLine.visible = false;
 			rightLine.visible = false;
 			stampWindow.visible = false;
