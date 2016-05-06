@@ -228,6 +228,114 @@
 				"y": 80
 			},
 			"tex": "assets/images/rockhor.png"
+		},
+		{
+			"pos": {
+				"x": 110,
+				"y": 166
+			},
+			"depth": 1e-05,
+			"size": {
+				"x": 64,
+				"y": 15
+			},
+			"tex": "assets/images/moss.png"
+		},
+		{
+			"pos": {
+				"x": 49,
+				"y": 166
+			},
+			"depth": -1e-05,
+			"size": {
+				"x": 64,
+				"y": 15
+			},
+			"tex": "assets/images/moss1.png"
+		},
+		{
+			"pos": {
+				"x": 236,
+				"y": 166
+			},
+			"depth": 3e-05,
+			"size": {
+				"x": 64,
+				"y": 15
+			},
+			"tex": "assets/images/moss1.png"
+		},
+		{
+			"pos": {
+				"x": 239,
+				"y": 171
+			},
+			"depth": 4e-05,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
+		},
+		{
+			"pos": {
+				"x": 146,
+				"y": 171
+			},
+			"depth": 5e-05,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
+		},
+		{
+			"pos": {
+				"x": 134,
+				"y": 170
+			},
+			"depth": 6e-05,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
+		},
+		{
+			"pos": {
+				"x": 53,
+				"y": 163
+			},
+			"depth": 3e-05,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
+		},
+		{
+			"pos": {
+				"x": 106,
+				"y": 174
+			},
+			"depth": -0.00015,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
+		},
+		{
+			"pos": {
+				"x": 108,
+				"y": 188
+			},
+			"depth": -0.00015,
+			"size": {
+				"x": 33,
+				"y": 27
+			},
+			"tex": "assets/images/moss2.png"
 		}
 	],
 	"colliders": [

@@ -94,6 +94,9 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/rock.png'});
 		config.preload.textures.push({id: 'assets/images/rockhor.png'});
 		config.preload.textures.push({id: 'assets/images/arbutus.png'});
+		config.preload.textures.push({id: 'assets/images/moss.png'});
+		config.preload.textures.push({id: 'assets/images/moss1.png'});
+		config.preload.textures.push({id: 'assets/images/moss2.png'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'assets/shaders/base.glsl', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
@@ -297,7 +300,7 @@ class Main extends luxe.Game {
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		rightBatcher.draw();
 		Luxe.renderer.target = sceneView;
-		Luxe.renderer.clear(new Color().rgb(0x3b3b28));
+		Luxe.renderer.clear(new Color().rgb(0x202012));
 		sceneBatcher.draw();
 		Luxe.renderer.target = null;
 	}

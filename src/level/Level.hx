@@ -68,6 +68,9 @@ class Level extends Entity {
 		{ id: 'assets/images/rock.png', w: 80, h: 128 },
 		{ id: 'assets/images/rockhor.png', w: 128, h: 80 },
 		{ id: 'assets/images/arbutus.png', w: 277, h: 250 },
+		{ id: 'assets/images/moss.png', w: 64, h: 15 },
+		{ id: 'assets/images/moss1.png', w: 64, h: 15 },
+		{ id: 'assets/images/moss2.png', w: 33, h: 27 },
 	];
 
 	var visualEditing: Bool = true;
