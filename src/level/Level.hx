@@ -64,6 +64,10 @@ class Level extends Entity {
 		{ id: 'assets/images/worldWrap128x64_6.png', w: 128, h: 64 },
 		{ id: 'assets/images/worldWrap128x64_7.png', w: 128, h: 64 },
 		{ id: 'assets/images/worldWrap128x64_8.png', w: 128, h: 64 },
+		{ id: 'assets/images/mossyrock.png', w: 80, h: 128 },
+		{ id: 'assets/images/rock.png', w: 80, h: 128 },
+		{ id: 'assets/images/rockhor.png', w: 128, h: 80 },
+		{ id: 'assets/images/arbutus.png', w: 277, h: 250 },
 	];
 
 	var visualEditing: Bool = true;
@@ -312,7 +316,7 @@ class Level extends Entity {
 		else {
 			trace('level ($path) null');
 		}
-		var cube = new Cube(new Vector(237,110), -1);
+		new Bridge(new Vector(364,110+64), -1);
 		adjustWrapping();
 	}
 
@@ -379,6 +383,7 @@ class Level extends Entity {
 		};
 
 		for(c in colliders) {
+			if(c.dontSave) continue;
 			var cObject: ColliderInfo = {
 				pos: { x: Math.round(c.collider.x), y: Math.round(c.collider.y) },
 				size: { x: c.width, y: c.height }

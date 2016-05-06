@@ -9,6 +9,8 @@ import luxe.collision.shapes.Polygon;
 class CollisionObject implements EditableObject {
 	public var collider(default, null): Polygon;
 
+	public var dontSave: Bool = false;
+
 	public var width: Int;
 	public var height: Int;
 

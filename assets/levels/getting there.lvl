@@ -1,0 +1,245 @@
+{
+	"wrapPoint": 600,
+	"visuals": [
+		{
+			"pos": {
+				"x": 169,
+				"y": 149
+			},
+			"depth": -4e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/mossyrock.png"
+		},
+		{
+			"pos": {
+				"x": -32,
+				"y": 160
+			},
+			"depth": 3.3881317890172e-21,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/mossyrock.png"
+		},
+		{
+			"pos": {
+				"x": -9,
+				"y": 157
+			},
+			"depth": 1e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": -59,
+				"y": 157
+			},
+			"depth": 2e-05,
+			"size": {
+				"x": 128,
+				"y": 80
+			},
+			"tex": "assets/images/rockhor.png"
+		},
+		{
+			"pos": {
+				"x": 24,
+				"y": 190
+			},
+			"depth": -1e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 165,
+				"y": 157
+			},
+			"depth": -2e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 90,
+				"y": 189
+			},
+			"depth": -3e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/mossyrock.png"
+		},
+		{
+			"pos": {
+				"x": 126,
+				"y": 174
+			},
+			"depth": -8e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/mossyrock.png"
+		},
+		{
+			"pos": {
+				"x": 118,
+				"y": 159
+			},
+			"depth": -0.00013,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 44,
+				"y": 156
+			},
+			"depth": -7e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 344,
+				"y": 158
+			},
+			"depth": 1e-05,
+			"size": {
+				"x": 128,
+				"y": 80
+			},
+			"tex": "assets/images/rockhor.png"
+		},
+		{
+			"pos": {
+				"x": 357,
+				"y": 162
+			},
+			"depth": -5e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 399,
+				"y": 159
+			},
+			"depth": -7e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": -50,
+				"y": -23
+			},
+			"depth": 4e-05,
+			"size": {
+				"x": 277,
+				"y": 250
+			},
+			"tex": "assets/images/arbutus.png"
+		},
+		{
+			"pos": {
+				"x": 445,
+				"y": 158
+			},
+			"depth": -5e-05,
+			"size": {
+				"x": 128,
+				"y": 80
+			},
+			"tex": "assets/images/rockhor.png"
+		},
+		{
+			"pos": {
+				"x": 442,
+				"y": 158
+			},
+			"depth": 2e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 487,
+				"y": 195
+			},
+			"depth": -8e-05,
+			"size": {
+				"x": 80,
+				"y": 128
+			},
+			"tex": "assets/images/rock.png"
+		},
+		{
+			"pos": {
+				"x": 495,
+				"y": 207
+			},
+			"depth": -0.00011,
+			"size": {
+				"x": 128,
+				"y": 80
+			},
+			"tex": "assets/images/rockhor.png"
+		},
+		{
+			"pos": {
+				"x": 177,
+				"y": 156
+			},
+			"depth": -8e-05,
+			"size": {
+				"x": 128,
+				"y": 80
+			},
+			"tex": "assets/images/rockhor.png"
+		}
+	],
+	"colliders": [
+		{
+			"pos": {
+				"x": 0,
+				"y": 173
+			},
+			"size": {
+				"x": 602,
+				"y": 62
+			}
+		}
+	]
+}

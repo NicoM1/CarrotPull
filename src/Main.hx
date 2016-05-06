@@ -89,7 +89,12 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_9.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_10.png'});
 		config.preload.textures.push({id: 'assets/images/worldWrap128x64_11.png'});
-		//config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'assets/shaders/base.glsl', frag_id: 'assets/shaders/base.glsl'});
+		config.preload.textures.push({id: 'assets/images/bridge.png'});
+		config.preload.textures.push({id: 'assets/images/mossyrock.png'});
+		config.preload.textures.push({id: 'assets/images/rock.png'});
+		config.preload.textures.push({id: 'assets/images/rockhor.png'});
+		config.preload.textures.push({id: 'assets/images/arbutus.png'});
+		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'assets/shaders/base.glsl', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
 
@@ -136,7 +141,7 @@ class Main extends luxe.Game {
 		});
 
 		rightCamera = new Camera({name: 'rightCamera'});
-		rightCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y);
+		rightCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y*2);
 		rightBatcher = Luxe.renderer.create_batcher({
 			name: 'rightBatcher',
 			camera: rightCamera.view,
@@ -145,7 +150,7 @@ class Main extends luxe.Game {
 		rightView = new RenderTexture({
 			id: 'rightView',
 			width: Math.floor(gameResolution.x/2),
-			height: Math.floor(gameResolution.y)
+			height: Math.floor(gameResolution.y*2)
 		});
 		rightView.filter_mag = FilterType.nearest;
 		rightSprite = new Sprite({
@@ -158,7 +163,7 @@ class Main extends luxe.Game {
 		});
 
 		leftCamera = new Camera({name: 'leftCamera'});
-		leftCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y);
+		leftCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y*2);
 		leftBatcher = Luxe.renderer.create_batcher({
 			name: 'leftBatcher',
 			camera: leftCamera.view,
@@ -167,7 +172,7 @@ class Main extends luxe.Game {
 		leftView = new RenderTexture({
 			id: 'leftView',
 			width: Math.floor(gameResolution.x/2),
-			height: Math.floor(gameResolution.y)
+			height: Math.floor(gameResolution.y*2)
 		});
 		leftView.filter_mag = FilterType.nearest;
 		leftSprite = new Sprite({
@@ -292,7 +297,7 @@ class Main extends luxe.Game {
 		Luxe.renderer.clear(new Color(0,0,0,0));
 		rightBatcher.draw();
 		Luxe.renderer.target = sceneView;
-		Luxe.renderer.clear(new Color(0,0,0,0));
+		Luxe.renderer.clear(new Color().rgb(0x3b3b28));
 		sceneBatcher.draw();
 		Luxe.renderer.target = null;
 	}
