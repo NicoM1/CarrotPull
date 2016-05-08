@@ -441,9 +441,6 @@ class Level extends Entity {
 				autoSave();
 			}
 		}
-		if(Luxe.input.keypressed(Key.key_s)) {
-			parseJSON(Json.stringify(makeJSON()));
-		}
 		if(Luxe.input.keypressed(Key.key_p)) {
 			playMode = !playMode;
 			stamp.visible = !playMode;

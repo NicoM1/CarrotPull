@@ -54,6 +54,7 @@ class Bridge extends VisualObject {
 	];*/
 
 	var texts: Array<String> = [
+		'test',
 		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent’s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
 
 		'I\'m sure that scar has faded now.',
@@ -81,6 +82,8 @@ class Bridge extends VisualObject {
 
 	var textPos: Int = 0;
 
+	var showing: Bool = false;
+
 	public function new(position: Vector, depth: Float) {
 		super('assets/images/bridge.png', position, new Vector(64, 15), 1);
 		origin = new Vector(64,3);
@@ -107,17 +110,16 @@ class Bridge extends VisualObject {
 
 		Luxe.events.listen('player.interact', function(o: {object: Player}) {
 			if(Math.abs(o.object.pos.x - pos.x) > 10) return;
-			if(lastText != null) lastText.drop(true);
-			/*lastText = Luxe.draw.text({
-				batcher: Main.sceneBatcher,
-				pos: {var posInt = pos.clone(); posInt.int(); posInt;},
-				point_size: 12,
-				text: texts[textPos],
-				smoothness: 0,
-				align: TextAlign.center,
-				align_vertical: TextAlign.top
-			});*/
-			textPos++;
+
+			if(!showing) {
+				Main.showText(texts[textPos]);
+				textPos++;
+				showing = true;
+			}
+			else {
+				Main.hideText();
+				showing = false;
+			}
 
 			Actuate.tween(collider.collider, 1, {rotation: -90});
 			Actuate.tween(this, 1.5, {rotation_z: 0}).ease(luxe.tween.easing.Bounce.easeOut);

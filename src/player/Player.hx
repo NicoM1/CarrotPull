@@ -16,6 +16,8 @@ class Player extends Sprite {
 
 	var boxSprite: VisualObject;
 
+	var paused: Bool = false;
+
 	public function new(_pos: Vector) {
 		super({
 			name: 'player',
@@ -36,6 +38,9 @@ class Player extends Sprite {
 		}
 		//Main.rightBatcher.add(this.geometry);
 		//Main.leftBatcher.add(this.geometry);
+
+		Luxe.events.listen('text.show', function(e) {paused = true;});
+		Luxe.events.listen('text.hide', function(e) {paused = false;});
 	}
 
 	public function gotBox() {
@@ -52,14 +57,18 @@ class Player extends Sprite {
 	var s = 20;
 
 	override function update(dt: Float) {
+		if(Luxe.input.keypressed(Key.key_e) || Luxe.input.keypressed(Key.rctrl) || Luxe.input.keypressed(Key.rctrl)) {
+			Luxe.events.fire('player.interact', {object: this});
+		}
+		if(paused) return;
 		//physics.velocity.x = 0;
-		if(Luxe.input.keydown(Key.left)) {
+		if(Luxe.input.keydown(Key.left) || Luxe.input.keydown(Key.key_a)) {
 			 physics.velocity.x = -s;
 		}
-		if(Luxe.input.keydown(Key.right)) {
+		if(Luxe.input.keydown(Key.right) || Luxe.input.keydown(Key.key_d)) {
 			 physics.velocity.x = s;
 		}
-		if(physics.onGround() && Luxe.input.keypressed(Key.up)) {
+		if(physics.onGround() && (Luxe.input.keypressed(Key.up) || Luxe.input.keypressed(Key.key_w) || Luxe.input.keypressed(Key.space))) {
 			physics.velocity.y = -120;
 		}
 
@@ -74,10 +83,6 @@ class Player extends Sprite {
 
 		if(pos.y > 500) {
 			pos.y = 0;
-		}
-
-		if(Luxe.input.keypressed(Key.key_e)) {
-			Luxe.events.fire('player.interact', {object: this});
 		}
 	}
 

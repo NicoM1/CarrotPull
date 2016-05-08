@@ -13,6 +13,7 @@ import phoenix.RenderTexture;
 import phoenix.Batcher;
 import phoenix.Shader;
 import phoenix.Texture;
+import phoenix.geometry.TextGeometry;
 
 import player.Player;
 import level.Level;
@@ -52,6 +53,11 @@ class Main extends luxe.Game {
 	public static var sceneCamera: Camera;
 	public static var sceneBatcher: Batcher;
 
+	static var renderView: RenderTexture;
+	static var renderSprite: Sprite;
+	public static var renderCamera: Camera;
+	public static var renderBatcher: Batcher;
+
 	static var rightView: RenderTexture;
 	static var rightSprite: Sprite;
 	static var rightCamera: Camera;
@@ -61,6 +67,9 @@ class Main extends luxe.Game {
 	static var leftSprite: Sprite;
 	static var leftCamera: Camera;
 	public static var leftBatcher: Batcher;
+
+	static var blurDist: Float = 0;
+	static var darkness: Float = 1;
 
 	public static var wrapPoint(default, set): Int = 300;
 
@@ -97,7 +106,7 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/moss.png'});
 		config.preload.textures.push({id: 'assets/images/moss1.png'});
 		config.preload.textures.push({id: 'assets/images/moss2.png'});
-		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'assets/shaders/base.glsl', frag_id: 'assets/shaders/base.glsl'});
+		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
 
@@ -114,6 +123,50 @@ class Main extends luxe.Game {
 		player = new Player(new Vector(60,10));
     }
 
+	static var text: TextGeometry;
+
+	static public function showText(msg: String) {
+		if(text == null) {
+			text = Luxe.draw.text({
+				batcher: renderBatcher,
+				text: '',
+				point_size: 12,
+				depth: 10000
+			});
+		}
+		/*var chars: Int = 0;
+		var final: String = '';
+		for(i in 0...msg.length) {
+			chars++;
+			if(chars > 50 && msg.charAt(i) == ' ') {
+				chars = 0;
+				final += '\n';
+			}
+			else {
+				final += msg.charAt(i);
+			}
+		}*/
+
+		text.text = msg;
+		text.bounds = new phoenix.Rectangle(0,0,300);
+		text.align = phoenix.BitmapFont.TextAlign.center;
+		text.bounds_wrap = true;
+		text.transform.pos.x = gameResolution.x/2 - 150;
+		text.transform.pos.y = gameResolution.y/2 - text.text_height/2;
+		text.color.a = 0;
+		luxe.tween.Actuate.tween(Main, 1, {blurDist: 0.03});
+		luxe.tween.Actuate.tween(Main, 1, {darkness: 0.4});
+		luxe.tween.Actuate.tween(text.color, 1, {a: 1});
+		Luxe.events.fire('text.show');
+	}
+
+	static public function hideText() {
+		luxe.tween.Actuate.tween(Main, 1, {blurDist: 0});
+		luxe.tween.Actuate.tween(Main, 1, {darkness: 1});
+		luxe.tween.Actuate.tween(text.color, 1, {a: 0});
+		Luxe.events.fire('text.hide');
+	}
+
 	static function set_wrapPoint(v: Int): Int {
 		wrapPoint = v;
 		regenWrapping();
@@ -121,6 +174,26 @@ class Main extends luxe.Game {
 	}
 
 	function setupWrapping() {
+		renderCamera = new Camera({name: 'renderCamera'});
+		renderBatcher = Luxe.renderer.create_batcher({
+			name: 'renderBatcher',
+			camera: renderCamera.view,
+			no_add: true
+		});
+		renderView = new RenderTexture({
+			id: 'renderView',
+			width: Math.floor(gameResolution.x),
+			height: Math.floor(gameResolution.y)
+		});
+		renderView.filter_mag = FilterType.nearest;
+		renderSprite = new Sprite({
+			centered: false,
+			pos: new Vector(0, 0),
+			texture: renderView,
+			size: new Vector(gameResolution.x*zoom, gameResolution.y * zoom),
+			depth: 5
+		});
+
 		sceneCamera = new Camera({name: 'sceneCamera'});
 		sceneBatcher = Luxe.renderer.create_batcher({
 			name: 'sceneBatcher',
@@ -135,13 +208,16 @@ class Main extends luxe.Game {
 		});
 		sceneView.filter_mag = FilterType.nearest;
 		sceneSprite = new Sprite({
+			batcher: renderBatcher,
 			centered: false,
 			pos: new Vector(0, 0),
 			texture: sceneView,
-			size: new Vector(gameResolution.x*zoom, gameResolution.y * zoom),
+			size: new Vector(gameResolution.x, gameResolution.y),
 			depth: 1,
-			//shader: Luxe.resources.shader('assets/shaders/base.glsl')
+			shader: Luxe.resources.shader('assets/shaders/base.glsl')
 		});
+
+		sceneSprite.shader.set_vector2('delta', new Vector(0,0));
 
 		rightCamera = new Camera({name: 'rightCamera'});
 		rightCamera.viewport = new luxe.Rectangle(0,0,gameResolution.x/2,gameResolution.y*2);
@@ -289,6 +365,8 @@ class Main extends luxe.Game {
 	}*/
 
     override function update(dt:Float) {
+		sceneSprite.shader.set_float('blurdist', blurDist);
+		sceneSprite.shader.set_float('darkness', darkness);
     }
 
 	var _transparent: Color = new Color(0,0,0,0);
@@ -302,6 +380,9 @@ class Main extends luxe.Game {
 		Luxe.renderer.target = sceneView;
 		Luxe.renderer.clear(new Color().rgb(0x202012));
 		sceneBatcher.draw();
+		Luxe.renderer.target = renderView;
+		Luxe.renderer.clear(new Color(1,1,1,1));
+		renderBatcher.draw();
 		Luxe.renderer.target = null;
 	}
 
