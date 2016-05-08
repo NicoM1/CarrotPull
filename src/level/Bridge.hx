@@ -53,37 +53,6 @@ class Bridge extends VisualObject {
 		'she found reflections of cameras in their eyes.'
 	];*/
 
-	var texts: Array<String> = [
-		'test',
-		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent’s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
-
-		'I\'m sure that scar has faded now.',
-
-		'Tim died a few weeks ago, although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
-
-		'Your letters feel so impersonal. I don’t want to hear how well school is going. I want to hear about the pretty walk you took the other day, or that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
-
-		'I saw your mom yesterday. She smiled when she spoke of you but her eyes were sad.',
-
-		'Please come home soon.',
-
-		'I still hike to the cliffs, taste sharp fear as I shuffle closer. I\'ll always take the easier way, but fear still rises. These cliffs have claimed one too many, one too young.',
-
-		'I still sneak onto the waterfront lawns of those so rich they can afford a million dollar home just to lounge about for a week or two every summer. Those who exist solely to make it impossible for us to.',
-
-		'The people here, the people that have watched me grow up, now give me long looks. As if wondering if I\'ll ever move on from here.',
-
-		'I found an apartment, the rent is good and the roommates are my age.',
-
-		'I think it\'s time to leave.'
-	];
-
-	var lastText: TextGeometry;
-
-	var textPos: Int = 0;
-
-	var showing: Bool = false;
-
 	public function new(position: Vector, depth: Float) {
 		super('assets/images/bridge.png', position, new Vector(64, 15), 1);
 		origin = new Vector(64,3);
@@ -110,17 +79,7 @@ class Bridge extends VisualObject {
 
 		Luxe.events.listen('player.interact', function(o: {object: Player}) {
 			if(Math.abs(o.object.pos.x - pos.x) > 10) return;
-
-			if(!showing) {
-				Main.showText(texts[textPos]);
-				textPos++;
-				showing = true;
-			}
-			else {
-				Main.hideText();
-				showing = false;
-			}
-
+			
 			Actuate.tween(collider.collider, 1, {rotation: -90});
 			Actuate.tween(this, 1.5, {rotation_z: 0}).ease(luxe.tween.easing.Bounce.easeOut);
 		});

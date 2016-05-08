@@ -8,6 +8,8 @@ import luxe.Vector;
 import luxe.Sprite;
 import luxe.Color;
 import luxe.Input;
+import luxe.tween.Actuate;
+import player.Player;
 
 import dialogs.Dialogs;
 
@@ -71,7 +73,40 @@ class Level extends Entity {
 		{ id: 'assets/images/moss.png', w: 64, h: 15 },
 		{ id: 'assets/images/moss1.png', w: 64, h: 15 },
 		{ id: 'assets/images/moss2.png', w: 33, h: 27 },
+		{ id: 'assets/images/note.png', w: 14, h: 22 },
 	];
+
+	var textPos: Int = 0;
+
+	var showing: Bool = false;
+
+	var texts: Array<String> = [
+		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent’s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
+
+		'I\'m sure that scar has faded now.',
+
+		'Tim died a few weeks ago, although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
+
+		'Your letters feel so impersonal. I don’t want to hear how well school is going. I want to hear about the pretty walk you took the other day, or that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
+
+		'I saw your mom yesterday. She smiled when she spoke of you but her eyes were sad.',
+
+		'Please come home soon.',
+
+		'I still hike to the cliffs, taste sharp fear as I shuffle closer. I\'ll always take the easier way, but fear still rises. These cliffs have claimed one too many, one too young.',
+
+		'I still sneak onto the waterfront lawns of those so rich they can afford a million dollar home just to lounge about for a week or two every summer. Those who exist solely to make it impossible for us to.',
+
+		'The people here, the people that have watched me grow up, now give me long looks. As if wondering if I\'ll ever move on from here.',
+
+		'I found an apartment, the rent is good and the roommates are my age.',
+
+		'I think it\'s time to leave.'
+	];
+
+	var notePositions: Array<Float> = [];
+	//once a note has been found, store it's position;
+	var notes: Array<Int> = [];
 
 	var visualEditing: Bool = true;
 	var curStamp: StampInfo;
@@ -109,6 +144,37 @@ class Level extends Entity {
 			loadLevel('assets/levels/test.lvl');
 			trace('default loaded');
 		}
+
+		for(i in 0...texts.length) {
+			notes[i] = -1;
+		}
+
+		Luxe.events.listen('player.interact', function(o: {object: Player}) {
+			var foundNote: Bool = false;
+			var text: Int = 0;
+			for(i in 0...notePositions.length) {
+				var note = notePositions[i];
+				if(Math.abs(o.object.pos.x + (o.object.size.x/2) - note) < 15) {
+					foundNote = true;
+					if(notes[i] == -1) {
+						notes[i] = textPos;
+						textPos++;
+					}
+					text = notes[i];
+					break;
+				}
+			}
+			if(!foundNote) return;
+
+			if(!showing) {
+				Main.showText(texts[text]);
+				showing = true;
+			}
+			else {
+				Main.hideText();
+				showing = false;
+			}
+		});
 	}
 
 	public function adjustWrapping() {
@@ -340,6 +406,9 @@ class Level extends Entity {
 		if(depth == null) {
 			lastDepth += 0.00001;
 			depth = lastDepth;
+		}
+		if(texture == 'assets/images/note.png') {
+			notePositions.push(pos.x);
 		}
 		new VisualObject(texture, pos, size, depth);
 	}

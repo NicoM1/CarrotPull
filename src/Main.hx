@@ -106,6 +106,7 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/moss.png'});
 		config.preload.textures.push({id: 'assets/images/moss1.png'});
 		config.preload.textures.push({id: 'assets/images/moss2.png'});
+		config.preload.textures.push({id: 'assets/images/note.png'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
