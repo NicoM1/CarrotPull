@@ -81,13 +81,17 @@ class Level extends Entity {
 	var showing: Bool = false;
 
 	var texts: Array<String> = [
-		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent’s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
+		'Sometimes I still have trouble accepting you aren\'t here. Accepting that I can\'t show up to your doorstep soaked through with rain in the middle of the night; pleading with you to see the beauty in the dark, wet forest.',
+
+		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent\'s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
 
 		'I\'m sure that scar has faded now.',
 
 		'Tim died a few weeks ago, although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
 
-		'Your letters feel so impersonal. I don’t want to hear how well school is going. I want to hear about the pretty walk you took the other day, or that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
+		'Your letters feel so impersonal. Don’t tell me about school, tell me about the pretty walk you took the other day. Tell me about that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
+
+		'Sometimes I still have trouble accepting you aren’t here. Accepting that I can’t show up to your doorstep soaked through with rain in the middle of the night; pleading with you to see the beauty in the dark, wet forest.',
 
 		'I saw your mom yesterday. She smiled when she spoke of you but her eyes were sad.',
 

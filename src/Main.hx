@@ -107,6 +107,7 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/moss1.png'});
 		config.preload.textures.push({id: 'assets/images/moss2.png'});
 		config.preload.textures.push({id: 'assets/images/note.png'});
+		config.preload.fonts.push({id: 'assets/fonts/font.fnt'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }
@@ -120,6 +121,8 @@ class Main extends luxe.Game {
 		setupWrapping();
 		//setupBorders();
 
+		Luxe.resources.texture('assets/fonts/font.png').filter_mag = FilterType.nearest;
+
 		new Level();
 		player = new Player(new Vector(60,10));
     }
@@ -131,7 +134,9 @@ class Main extends luxe.Game {
 			text = Luxe.draw.text({
 				batcher: renderBatcher,
 				text: '',
-				point_size: 12,
+				color: new Color(0.8,0.8,0.8),
+				font: Luxe.resources.font('assets/fonts/font.fnt'),
+				point_size: 9,
 				depth: 10000
 			});
 		}

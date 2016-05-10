@@ -30,6 +30,7 @@ class VisualObject extends Sprite implements EditableObject {
 		});
 		if(texture != null) {
 			texture.filter_mag = FilterType.nearest;
+			texture.filter_min = FilterType.nearest;
 		}
 
 		this.texturePath = texturePath;
