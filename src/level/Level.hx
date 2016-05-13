@@ -81,17 +81,16 @@ class Level extends Entity {
 	var showing: Bool = false;
 
 	var texts: Array<String> = [
-		'Sometimes I still have trouble accepting you aren\'t here. Accepting that I can\'t show up to your doorstep soaked through with rain in the middle of the night; pleading with you to see the beauty in the dark, wet forest.',
 
 		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent\'s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
 
 		'I\'m sure that scar has faded now.',
 
-		'Tim died a few weeks ago, although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
+		'Tim died a few weeks ago. Although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
 
-		'Your letters feel so impersonal. Don’t tell me about school, tell me about the pretty walk you took the other day. Tell me about that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
+		'Your letters feel so impersonal. Don\'t tell me about school, tell me about the pretty walk you took the other day. Tell me about that annoying patch of dry skin that keeps being worn raw despite every attempt at the right shoe/sock combination.',
 
-		'Sometimes I still have trouble accepting you aren’t here. Accepting that I can’t show up to your doorstep soaked through with rain in the middle of the night; pleading with you to see the beauty in the dark, wet forest.',
+		'Sometimes I still have trouble accepting you aren\'t here. Accepting I can\'t show up to your doorstep soaked through with rain in the middle of the night; pleading with you to see the beauty in the dark, wet forest.',
 
 		'I saw your mom yesterday. She smiled when she spoke of you but her eyes were sad.',
 
@@ -110,12 +109,14 @@ class Level extends Entity {
 
 	var notePositions: Array<Float> = [];
 	//once a note has been found, store it's position;
-	var notes: Array<Int> = [];
+	var notes: Array<Array<Int>> = [];
 
 	var visualEditing: Bool = true;
 	var curStamp: StampInfo;
 
 	var lastDepth: Float = 0;
+
+	var wrapTimes: Int = 0;
 
 	function setCurrent(path: String) {
 		current = Util.getRelativePath(path);
@@ -149,22 +150,25 @@ class Level extends Entity {
 			trace('default loaded');
 		}
 
-		for(i in 0...texts.length) {
-			notes[i] = -1;
-		}
-
 		Luxe.events.listen('player.interact', function(o: {object: Player}) {
 			var foundNote: Bool = false;
 			var text: Int = 0;
+			if(notes[wrapTimes + 100] == null) {
+				notes[wrapTimes + 100] = [];
+				for(i in 0...texts.length) {
+					notes[wrapTimes + 100][i] = -1;
+				}
+			}
 			for(i in 0...notePositions.length) {
 				var note = notePositions[i];
+				var wrapTimes1 = wrapTimes + 100;
 				if(Math.abs(o.object.pos.x + (o.object.size.x/2) - note) < 15) {
 					foundNote = true;
-					if(notes[i] == -1) {
-						notes[i] = textPos;
+					if(notes[wrapTimes1][i] == -1) {
+						notes[wrapTimes1][i] = textPos;
 						textPos++;
 					}
-					text = notes[i];
+					text = notes[wrapTimes1][i];
 					break;
 				}
 			}
@@ -178,6 +182,13 @@ class Level extends Entity {
 				Main.hideText();
 				showing = false;
 			}
+		});
+
+		Luxe.events.listen('player.wrap.right', function(e) {
+			wrapTimes++;
+		});
+		Luxe.events.listen('player.wrap.left', function(e) {
+			wrapTimes--;
 		});
 	}
 

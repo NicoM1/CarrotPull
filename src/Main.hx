@@ -79,7 +79,7 @@ class Main extends luxe.Game {
 		config.window.width = Math.floor(gameResolution.x * zoom);
 		config.window.height = Math.floor(gameResolution.y * zoom);
 
-		config.window.title = 'why not just fucking talk to plants';
+		config.window.title = 'letters.';
 
 		config.preload.textures.push({id: 'assets/images/plant.png'});
 		config.preload.textures.push({id: 'assets/images/carrot.png'});
@@ -107,6 +107,7 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/moss1.png'});
 		config.preload.textures.push({id: 'assets/images/moss2.png'});
 		config.preload.textures.push({id: 'assets/images/note.png'});
+		config.preload.textures.push({id: 'assets/images/player.png'});
 		config.preload.fonts.push({id: 'assets/fonts/font.fnt'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
         return config;

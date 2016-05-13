@@ -79,7 +79,7 @@ class Bridge extends VisualObject {
 
 		Luxe.events.listen('player.interact', function(o: {object: Player}) {
 			if(Math.abs(o.object.pos.x - pos.x) > 10) return;
-			
+
 			Actuate.tween(collider.collider, 1, {rotation: -90});
 			Actuate.tween(this, 1.5, {rotation_z: 0}).ease(luxe.tween.easing.Bounce.easeOut);
 		});

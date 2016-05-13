@@ -5,6 +5,8 @@ import luxe.Vector;
 import luxe.Input;
 import luxe.Color;
 
+import phoenix.Texture;
+
 import shared.PhysicsComponentBase;
 
 import level.VisualObject;
@@ -25,8 +27,10 @@ class Player extends Sprite {
 			size: new Vector(19,31),
 			centered: false,
 			batcher: Main.sceneBatcher,
+			texture: Luxe.resources.texture('assets/images/player.png'),
 			depth: 0
 		});
+		texture.filter_mag = FilterType.nearest;
 		physics = add(new PhysicsComponentBase(Std.int(size.x),Std.int(size.y)));
 		physics.afterMovement = function() {
 			Main.sceneCamera.pos.x = pos.x -Main.gameResolution.x/2;
@@ -64,9 +68,11 @@ class Player extends Sprite {
 		//physics.velocity.x = 0;
 		if(Luxe.input.keydown(Key.left) || Luxe.input.keydown(Key.key_a)) {
 			 physics.velocity.x = -s;
+			 flipx = true;
 		}
 		if(Luxe.input.keydown(Key.right) || Luxe.input.keydown(Key.key_d)) {
 			 physics.velocity.x = s;
+			 flipx = false;
 		}
 		if(physics.onGround() && (Luxe.input.keypressed(Key.up) || Luxe.input.keypressed(Key.key_w) || Luxe.input.keypressed(Key.space))) {
 			physics.velocity.y = -120;
