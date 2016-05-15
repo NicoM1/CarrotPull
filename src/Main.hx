@@ -79,7 +79,7 @@ class Main extends luxe.Game {
 		config.window.width = Math.floor(gameResolution.x * zoom);
 		config.window.height = Math.floor(gameResolution.y * zoom);
 
-		config.window.title = 'letters.';
+		config.window.title = 'Every other Wednesday.';
 
 		config.preload.textures.push({id: 'assets/images/plant.png'});
 		config.preload.textures.push({id: 'assets/images/carrot.png'});
@@ -108,7 +108,9 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/moss2.png'});
 		config.preload.textures.push({id: 'assets/images/note.png'});
 		config.preload.textures.push({id: 'assets/images/player.png'});
+		config.preload.textures.push({id: 'assets/images/playersheet.png'});
 		config.preload.fonts.push({id: 'assets/fonts/font.fnt'});
+		config.preload.jsons.push({id: 'assets/files/animation/player_anim.json'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
         return config;
     }

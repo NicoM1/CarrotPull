@@ -4,6 +4,7 @@ import luxe.Sprite;
 import luxe.Vector;
 import luxe.Input;
 import luxe.Color;
+import luxe.components.sprite.SpriteAnimation;
 
 import phoenix.Texture;
 
@@ -20,14 +21,16 @@ class Player extends Sprite {
 
 	var paused: Bool = false;
 
+	var anim: SpriteAnimation;
+
 	public function new(_pos: Vector) {
 		super({
 			name: 'player',
 			pos: _pos,
-			size: new Vector(19,31),
+			size: new Vector(17,27),
 			centered: false,
 			batcher: Main.sceneBatcher,
-			texture: Luxe.resources.texture('assets/images/player.png'),
+			texture: Luxe.resources.texture('assets/images/playersheet.png'),
 			depth: 0
 		});
 		texture.filter_mag = FilterType.nearest;
@@ -40,11 +43,21 @@ class Player extends Sprite {
 				boxSprite.adjustWrapping();
 			}
 		}
+
+		anim = add(new SpriteAnimation({name: 'anim'}));
+		createAnim();
 		//Main.rightBatcher.add(this.geometry);
 		//Main.leftBatcher.add(this.geometry);
 
 		Luxe.events.listen('text.show', function(e) {paused = true;});
 		Luxe.events.listen('text.hide', function(e) {paused = false;});
+	}
+
+	function createAnim() {
+		var j = Luxe.resources.json('assets/files/animation/player_anim.json');
+		anim.add_from_json_object(j.asset.json);
+		anim.animation = 'idle';
+		anim.play();
 	}
 
 	public function gotBox() {
@@ -69,13 +82,21 @@ class Player extends Sprite {
 		if(Luxe.input.keydown(Key.left) || Luxe.input.keydown(Key.key_a)) {
 			 physics.velocity.x = -s;
 			 flipx = true;
+			 if(anim.animation != 'walk')
+			 	anim.animation = 'walk';
 		}
 		if(Luxe.input.keydown(Key.right) || Luxe.input.keydown(Key.key_d)) {
 			 physics.velocity.x = s;
 			 flipx = false;
+			 if(anim.animation != 'walk')
+				anim.animation = 'walk';
 		}
 		if(physics.onGround() && (Luxe.input.keypressed(Key.up) || Luxe.input.keypressed(Key.key_w) || Luxe.input.keypressed(Key.space))) {
 			physics.velocity.y = -120;
+		}
+
+		if(physics.velocity.x == 0 ){
+			anim.animation = 'idle';
 		}
 
 		if(pos.x > Main.wrapPoint) {
