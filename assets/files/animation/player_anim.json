@@ -10,5 +10,12 @@
 		"frameset": ["9"],
 		"loop": "true",
 		"speed": "6"
+	},
+	"jump": {
+		"frame_size": {"x": "17", "y": "27"},
+		"frameset": ["10"],
+		"loop": "true",
+		"speed": "6"
 	}
+}
 }

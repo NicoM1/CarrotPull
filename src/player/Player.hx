@@ -71,7 +71,7 @@ class Player extends Sprite {
 	}
 
 
-	var s = 20;
+	var s = 25;
 
 	override function update(dt: Float) {
 		if(Luxe.input.keypressed(Key.key_e) || Luxe.input.keypressed(Key.rctrl) || Luxe.input.keypressed(Key.rctrl)) {
@@ -95,8 +95,12 @@ class Player extends Sprite {
 			physics.velocity.y = -120;
 		}
 
-		if(physics.velocity.x == 0 ){
+		if(physics.velocity.x == 0){
 			anim.animation = 'idle';
+		}
+
+		if(!physics.onGround()) {
+			anim.animation = 'jump';
 		}
 
 		if(pos.x > Main.wrapPoint) {
