@@ -80,27 +80,28 @@ class Player extends Sprite {
 		if(paused) return;
 		//physics.velocity.x = 0;
 		if(Luxe.input.keydown(Key.left) || Luxe.input.keydown(Key.key_a)) {
-			 physics.velocity.x = -s;
-			 flipx = true;
-			 if(anim.animation != 'walk')
+			physics.velocity.x = -s;
+		 	flipx = true;
+			if(physics.onGround() && anim.animation != 'walk')
 			 	anim.animation = 'walk';
 		}
 		if(Luxe.input.keydown(Key.right) || Luxe.input.keydown(Key.key_d)) {
-			 physics.velocity.x = s;
-			 flipx = false;
-			 if(anim.animation != 'walk')
+			physics.velocity.x = s;
+			flipx = false;
+			if(physics.onGround() && anim.animation != 'walk')
 				anim.animation = 'walk';
 		}
 		if(physics.onGround() && (Luxe.input.keypressed(Key.up) || Luxe.input.keypressed(Key.key_w) || Luxe.input.keypressed(Key.space))) {
 			physics.velocity.y = -120;
 		}
 
-		if(physics.velocity.x == 0){
+		if(physics.onGround() && physics.velocity.x == 0){
 			anim.animation = 'idle';
 		}
 
 		if(!physics.onGround()) {
-			anim.animation = 'jump';
+			if(anim.animation != 'jump')
+				anim.animation = 'jump';
 		}
 
 		if(pos.x > Main.wrapPoint) {

@@ -116,7 +116,7 @@ class Level extends Entity {
 
 	var lastDepth: Float = 0;
 
-	var wrapTimes: Int = 0;
+	static public var wrapTimes: Int = 0;
 
 	function setCurrent(path: String) {
 		current = Util.getRelativePath(path);
@@ -401,6 +401,7 @@ class Level extends Entity {
 			trace('level ($path) null');
 		}
 		new Bridge(new Vector(364,110+64), -1);
+		new Leaf(new Vector(364, 100));
 		adjustWrapping();
 	}
 

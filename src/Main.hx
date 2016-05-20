@@ -376,6 +376,7 @@ class Main extends luxe.Game {
     override function update(dt:Float) {
 		sceneSprite.shader.set_float('blurdist', blurDist);
 		sceneSprite.shader.set_float('darkness', darkness);
+		//sceneSprite.shader.set_float('wraps', Level.wrapTimes);
     }
 
 	var _transparent: Color = new Color(0,0,0,0);
