@@ -74,6 +74,9 @@ class Level extends Entity {
 		{ id: 'assets/images/moss1.png', w: 64, h: 15 },
 		{ id: 'assets/images/moss2.png', w: 33, h: 27 },
 		{ id: 'assets/images/note.png', w: 14, h: 22 },
+		{ id: 'assets/images/rope.png', w: 128, h: 80 },
+		{ id: 'assets/images/cache.png', w: 128, h: 80 },
+		{ id: 'assets/images/cacheopen.png', w: 128, h: 128 },
 	];
 
 	var textPos: Int = 0;
@@ -85,6 +88,12 @@ class Level extends Entity {
 		'I went to the park today. Sat down on the bench. The bench we played on as kids, where you would pocket crusts of picnic sandwiches to feed the geese while our parent\'s backs were turned. Where you leaned in too close and got that little diamond scar that follows the base of your jaw.',
 
 		'I\'m sure that scar has faded now.',
+
+		'I love the smell of earth after a rain, there\'s something comforting in that scent, a sense that everything beneath the surface is almost ready to bloom.',
+
+		'In every new puddle I see your face; you would always peer through the murky water, as if hoping something would peer back.',
+
+		//'Do you remember that place, you know, the one? It was just past that rotten stump, but then back over the bridge? Wasn\'t it something like that?',
 
 		'Tim died a few weeks ago. Although you would be hard pressed to find someone who didn\'t think he\'d just been savouring his last breath for the past decade.',
 
@@ -107,14 +116,17 @@ class Level extends Entity {
 		'I think it\'s time to leave.'
 	];
 
-	var notePositions: Array<Float> = [];
-	//once a note has been found, store it's position;
-	var notes: Array<Array<Int>> = [];
+	var notes: Array<{x: Float, index: Int, ?loop: Int}> = [];
 
 	var visualEditing: Bool = true;
 	var curStamp: StampInfo;
 
 	var lastDepth: Float = 0;
+
+	var stumpPos: Int = -1;
+	var seenStump: Bool = false;
+
+	var currentScene: Float -> Void;
 
 	static public var wrapTimes: Int = 0;
 
@@ -153,22 +165,14 @@ class Level extends Entity {
 		Luxe.events.listen('player.interact', function(o: {object: Player}) {
 			var foundNote: Bool = false;
 			var text: Int = 0;
-			if(notes[wrapTimes + 100] == null) {
-				notes[wrapTimes + 100] = [];
-				for(i in 0...texts.length) {
-					notes[wrapTimes + 100][i] = -1;
-				}
-			}
-			for(i in 0...notePositions.length) {
-				var note = notePositions[i];
-				var wrapTimes1 = wrapTimes + 100;
-				if(Math.abs(o.object.pos.x + (o.object.size.x/2) - note) < 15) {
-					foundNote = true;
-					if(notes[wrapTimes1][i] == -1) {
-						notes[wrapTimes1][i] = textPos;
-						textPos++;
+			for(i in 0...notes.length) {
+				var note = notes[i];
+				if(Math.abs(o.object.pos.x + (o.object.size.x/2) - note.x) < 15) {
+					if(note.loop != null && note.loop != wrapTimes) {
+						continue;
 					}
-					text = notes[wrapTimes1][i];
+					foundNote = true;
+					text = note.index;
 					break;
 				}
 			}
@@ -177,18 +181,30 @@ class Level extends Entity {
 			if(!showing) {
 				Main.showText(texts[text]);
 				showing = true;
+				if(text == textPos) {
+					textPos++;
+				}
 			}
 			else {
-				Main.hideText();
-				showing = false;
+				//Main.hideText();
 			}
 		});
 
 		Luxe.events.listen('player.wrap.right', function(e) {
 			wrapTimes++;
+			/*if(wrapTimes == 1) {
+				Main.showText('It was kinda...special?');
+			}*/
 		});
 		Luxe.events.listen('player.wrap.left', function(e) {
 			wrapTimes--;
+			/*if(wrapTimes == stumpPos) {
+				seenStump = true;
+			}*/
+		});
+
+		Luxe.events.listen('text.hide', function(e) {
+			showing = false;
 		});
 	}
 
@@ -401,7 +417,8 @@ class Level extends Entity {
 			trace('level ($path) null');
 		}
 		new Bridge(new Vector(364,110+64), -1);
-		new Leaf(new Vector(364, 100));
+		//new Leaf(new Vector(364, 100));
+		//new SetPiece('assets/images/note.png', new Vector(300,110+64-80), new Vector(18,18), 1);
 		adjustWrapping();
 	}
 
@@ -423,10 +440,40 @@ class Level extends Entity {
 			lastDepth += 0.00001;
 			depth = lastDepth;
 		}
-		if(texture == 'assets/images/note.png') {
-			notePositions.push(pos.x);
+		return new VisualObject(texture, pos, size, depth);
+	}
+
+	function addSetpiece(texture: String, pos: Vector, size: Vector, ?centered: Bool = false, loops: Int, ?depth: Float) {
+		if(!loading)
+			changed = true;
+		if(centered) {
+			pos.x -= size.x/2;
+			pos.y -= size.y/2;
 		}
-		new VisualObject(texture, pos, size, depth);
+		pos.int();
+		size.int();
+		if(depth == null) {
+			lastDepth += 0.00001;
+			depth = lastDepth;
+		}
+		var setpiece = new SetPiece(texture, pos, size, depth, loops, wrapTimes);
+		setpiece.dontSave = true;
+
+		return setpiece;
+	}
+
+	function addNote(textPosition: Int, pos: Vector, ?loops: Int) {
+		var visual: VisualObject;
+		if(loops != null) {
+			visual = addSetpiece('assets/images/note.png', pos, new Vector(14, 22), loops);
+		}
+		else {
+			visual = addVisual('assets/images/note.png', pos, new Vector(14, 22));
+		}
+
+		visual.dontSave = true;
+
+		notes.push({x: pos.x, index: textPosition, loop: loops});
 	}
 
 	public function addCollider(pos: Vector, size: Vector, ?centered: Bool = false): CollisionObject {
@@ -511,7 +558,6 @@ class Level extends Entity {
 		if(jsonO.wrapPoint != null) {
 			Main.wrapPoint = jsonO.wrapPoint;
 		}
-		trace('done');
 		loading = false;
 	}
 
@@ -591,7 +637,40 @@ class Level extends Entity {
 			stampWindow.visible = false;
 		}
 
+		if(currentScene != null) {
+			currentScene(dt);
+		}
+		placeTexts();
 		//conversation.update();
+	}
+
+	var lastTextPos: Int = -1;
+	var timer1: Float = 0;
+	function placeTexts() {
+		if(textPos == lastTextPos) return;
+		switch (textPos) {
+			case 0:
+				addNote(0, new Vector(100, 130), 0);
+			case 1:
+				addNote(1, new Vector(100, 100), 1);
+			case 2:
+				addNote(2, new Vector(300, 140), -2);
+			case 3:
+				addNote(3, new Vector(300, 140), -3);
+				currentScene = function(dt) {
+					timer += dt;
+					//trace('we\'re here');
+					if(timer > 1.5) {
+						Main.darken(0.7);
+					}
+				}
+			case 4:
+				addNote(4, new Vector(270, 140), -3);
+				//Main.darken(0);
+				currentScene = null;
+		}
+
+		lastTextPos = textPos;
 	}
 }
 

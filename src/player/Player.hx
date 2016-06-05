@@ -23,6 +23,10 @@ class Player extends Sprite {
 
 	var anim: SpriteAnimation;
 
+	var textShowing: Bool = false;
+
+	var wrapTimes: Int = 0;
+
 	public function new(_pos: Vector) {
 		super({
 			name: 'player',
@@ -49,8 +53,14 @@ class Player extends Sprite {
 		//Main.rightBatcher.add(this.geometry);
 		//Main.leftBatcher.add(this.geometry);
 
-		Luxe.events.listen('text.show', function(e) {paused = true;});
-		Luxe.events.listen('text.hide', function(e) {paused = false;});
+		Luxe.events.listen('text.show', function(e) {
+			paused = true;
+			textShowing = true;
+		});
+		Luxe.events.listen('text.hide', function(e) {
+			paused = false;
+			textShowing = false;
+		});
 	}
 
 	function createAnim() {
@@ -71,26 +81,33 @@ class Player extends Sprite {
 	}
 
 
-	var s = 25;
+	var s = 45;
 
 	override function update(dt: Float) {
 		if(Luxe.input.keypressed(Key.key_e) || Luxe.input.keypressed(Key.rctrl) || Luxe.input.keypressed(Key.rctrl)) {
-			Luxe.events.fire('player.interact', {object: this});
+			if(textShowing) {
+				Main.hideText();
+			}
+			else {
+				Luxe.events.fire('player.interact', {object: this});
+			}
 		}
 		if(paused) return;
 		//physics.velocity.x = 0;
+		var speed: Float = 0;
 		if(Luxe.input.keydown(Key.left) || Luxe.input.keydown(Key.key_a)) {
-			physics.velocity.x = -s;
+			speed -= s;
 		 	flipx = true;
 			if(physics.onGround() && anim.animation != 'walk')
 			 	anim.animation = 'walk';
 		}
 		if(Luxe.input.keydown(Key.right) || Luxe.input.keydown(Key.key_d)) {
-			physics.velocity.x = s;
+			speed += s;
 			flipx = false;
 			if(physics.onGround() && anim.animation != 'walk')
 				anim.animation = 'walk';
 		}
+		physics.velocity.x = speed;
 		if(physics.onGround() && (Luxe.input.keypressed(Key.up) || Luxe.input.keypressed(Key.key_w) || Luxe.input.keypressed(Key.space))) {
 			physics.velocity.y = -120;
 		}
@@ -105,11 +122,13 @@ class Player extends Sprite {
 		}
 
 		if(pos.x > Main.wrapPoint) {
-			Luxe.events.fire('player.wrap.right', {object: this});
+			wrapTimes++;
+			Luxe.events.fire('player.wrap.right', {wraps: wrapTimes});
 			pos.x = pos.x - Main.wrapPoint;
 		}
 		if(pos.x < 0) {
-			Luxe.events.fire('player.wrap.left', {object: this});
+			wrapTimes--;
+			Luxe.events.fire('player.wrap.left', {wraps: wrapTimes});
 			pos.x = Main.wrapPoint + pos.x;
 		}
 

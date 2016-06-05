@@ -32,6 +32,8 @@ import shared.ShapeDrawerBatch;
 
 import sdl.SDL;
 
+import luxe.tween.Actuate;
+
 class Main extends luxe.Game {
 
 	var player: Sprite;
@@ -109,6 +111,9 @@ class Main extends luxe.Game {
 		config.preload.textures.push({id: 'assets/images/note.png'});
 		config.preload.textures.push({id: 'assets/images/player.png'});
 		config.preload.textures.push({id: 'assets/images/playersheet.png'});
+		config.preload.textures.push({id: 'assets/images/rope.png'});
+		config.preload.textures.push({id: 'assets/images/cache.png'});
+		config.preload.textures.push({id: 'assets/images/cacheopen.png'});
 		config.preload.fonts.push({id: 'assets/fonts/font.fnt'});
 		config.preload.jsons.push({id: 'assets/files/animation/player_anim.json'});
 		config.preload.shaders.push({id: 'assets/shaders/base.glsl', vert_id: 'default', frag_id: 'assets/shaders/base.glsl'});
@@ -129,6 +134,11 @@ class Main extends luxe.Game {
 		new Level();
 		player = new Player(new Vector(60,10));
     }
+
+	static public function darken(value: Float) {
+		value = 1-value;
+		Actuate.tween(Main, 1, {darkness: value});
+	}
 
 	static var text: TextGeometry;
 
@@ -246,7 +256,7 @@ class Main extends luxe.Game {
 			batcher: sceneBatcher,
 			pos: new Vector(0,0),
 			texture: rightView,
-			size: new Vector(rightView.width,rightView.height),
+			size: new Vector(rightView.width, rightView.height),
 			depth: 2
 		});
 
@@ -400,8 +410,8 @@ class Main extends luxe.Game {
 	}
 
 	override function ondestroy() {
-		if(Level.instance.changed)
-			SDL.showSimpleMessageBox(SDLMessageBoxFlags.SDL_MESSAGEBOX_ERROR, 'quit without saving?', 'are you sure you wish to quit?', Luxe.snow.runtime.window);
+		//if(Level.instance.changed)
+		//	SDL.showSimpleMessageBox(SDLMessageBoxFlags.SDL_MESSAGEBOX_ERROR, 'quit without saving?', 'are you sure you wish to quit?', Luxe.snow.runtime.window);
 
 		Level.instance.destroy();
     }
